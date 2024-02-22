@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import NavigationBar from "./NavigationBar";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -15,6 +16,7 @@ export default function Home() {
 
   return (
     <div>
+      <NavigationBar />
       The current theme is: {theme}
       <button onClick={() => setTheme("light")}>Light Mode</button>
       <button onClick={() => setTheme("dark")}>Dark Mode</button>
