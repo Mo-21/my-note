@@ -13,6 +13,7 @@ import {
 import React from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
 import { SearchIcon } from "./assets/SearchIcon";
+import ThemeSwitch from "./ThemeSwitch";
 
 const NavigationBar = () => {
   return (
@@ -50,7 +51,9 @@ const NavigationBar = () => {
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
+              <DropdownItem key="theme">
+                <ThemeSwitch />
+              </DropdownItem>
               <DropdownItem key="system">System</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
               <DropdownItem key="help_and_feedback">
