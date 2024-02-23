@@ -49,12 +49,16 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }).finally(() => {
-        toast.success("New note created");
-        setIsSubmitting(false);
-        reset();
-        onClose();
-      });
+      })
+        .catch(() => {
+          toast.error("Something went wrong");
+        })
+        .finally(() => {
+          toast.success("New note created");
+          setIsSubmitting(false);
+          reset();
+          onClose();
+        });
     } catch (error) {
       toast.error("Something went wrong");
     }
