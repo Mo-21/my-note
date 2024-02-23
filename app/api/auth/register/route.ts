@@ -1,4 +1,7 @@
-import { SignUpSchemaType, signUpSchema } from "@/app/validationSchema";
+import {
+  SignUpSchemaType,
+  signUpSchema,
+} from "@/prisma/schema/validationSchema";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
