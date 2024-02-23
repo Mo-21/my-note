@@ -8,11 +8,10 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Skeleton,
 } from "@nextui-org/react";
 import { AcmeLogo } from "./assets/AcmeLogo";
 import { SearchIcon } from "./assets/SearchIcon";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 
 const NavbarSkeleton = () => {
   return (
@@ -34,25 +33,20 @@ const NavbarSkeleton = () => {
         <NavbarItem className="flex justify-center flex-grow">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Skeleton
-                count={1}
-                width={"2.8rem"}
-                height={"2.8rem"}
-                borderRadius={"100%"}
-              />
+              <Skeleton className="flex rounded-full w-12 h-12" />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <Skeleton count={1} width={"5rem"} />
+                <Skeleton className="h-3 w-3/5 rounded-lg" />
               </DropdownItem>
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Email</p>
-                <Skeleton count={1} width={"5rem"} />
+                <Skeleton className="h-3 w-3/5 rounded-lg" />
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="theme">
-                <Skeleton count={1} width={"5rem"} />
+                <Skeleton className="h-3 w-3/5 rounded-lg" />
               </DropdownItem>
               <DropdownItem key="system">System</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
