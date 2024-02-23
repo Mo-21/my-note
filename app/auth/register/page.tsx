@@ -2,7 +2,10 @@
 
 import { AcmeLogo } from "@/app/assets/AcmeLogo";
 import ErrorCallout from "@/app/components/ErrorCallout";
-import { signUpSchema, SignUpSchemaType } from "@/app/validationSchema";
+import {
+  SignUpSchemaType,
+  signUpSchema,
+} from "@/prisma/schema/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LoginSchemaType, loginSchema } from "@/app/validationSchema";
+import { LoginSchemaType, loginSchema } from "@/prisma/schema/validationSchema";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
