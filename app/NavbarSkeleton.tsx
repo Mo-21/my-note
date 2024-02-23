@@ -1,30 +1,20 @@
-"use client";
 import {
   Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
   Input,
-  DropdownItem,
-  DropdownTrigger,
+  NavbarContent,
+  NavbarBrand,
+  NavbarItem,
   Dropdown,
+  DropdownTrigger,
   DropdownMenu,
-  Avatar,
+  DropdownItem,
 } from "@nextui-org/react";
-import React from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
 import { SearchIcon } from "./assets/SearchIcon";
-import ThemeSwitch from "./ThemeSwitch";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import NavbarSkeleton from "./NavbarSkeleton";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const NavigationBar = () => {
-  const router = useRouter();
-  const { data } = useSession();
-
-  if (!data || !data.user || !data.user.name) return <NavbarSkeleton />;
-
+const NavbarSkeleton = () => {
   return (
     <Navbar isBordered>
       <NavbarContent className="justify-between">
@@ -44,40 +34,32 @@ const NavigationBar = () => {
         <NavbarItem className="flex justify-center flex-grow">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                color="secondary"
-                name={data.user.name}
-                size="md"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              <Skeleton
+                count={1}
+                width={"2.8rem"}
+                height={"2.8rem"}
+                borderRadius={"100%"}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">{data.user.name}</p>
+                <Skeleton count={1} width={"5rem"} />
               </DropdownItem>
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Email</p>
-                <p className="font-semibold">{data.user.email}</p>
+                <Skeleton count={1} width={"5rem"} />
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="theme">
-                <ThemeSwitch />
+                <Skeleton count={1} width={"5rem"} />
               </DropdownItem>
               <DropdownItem key="system">System</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
               </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  router.push("api/auth/signout");
-                }}
-                key="logout"
-                color="danger"
-              >
+              <DropdownItem key="logout" color="danger">
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -88,4 +70,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default NavbarSkeleton;
