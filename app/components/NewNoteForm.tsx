@@ -14,6 +14,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { useGetNotes } from "../hooks/useGetNotes";
 
 interface NewNoteFormProps {
   isOpen: boolean;
@@ -37,6 +38,8 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
     resolver: zodResolver(newNoteSchema),
   });
 
+  const { refetch } = useGetNotes();
+
   const onSubmit: SubmitHandler<NewNoteType> = async (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
@@ -57,6 +60,7 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
           toast.success("New note created");
           setIsSubmitting(false);
           reset();
+          refetch();
           onClose();
         });
     } catch (error) {
