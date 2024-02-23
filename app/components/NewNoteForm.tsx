@@ -76,6 +76,7 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
       size="5xl"
       scrollBehavior="inside"
       disableAnimation={true}
+      placement="center"
     >
       <ModalContent className="p-3 w-full">
         <form onSubmit={handleSubmit(onSubmit)}>
