@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar,
   NavbarBrand,
@@ -14,8 +15,15 @@ import React from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
 import { SearchIcon } from "./assets/SearchIcon";
 import ThemeSwitch from "./ThemeSwitch";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const NavigationBar = () => {
+  const router = useRouter();
+  const { data } = useSession();
+
+  if (!data || !data.user || !data.user.name) return;
+
   return (
     <Navbar isBordered>
       <NavbarContent className="justify-between">
@@ -39,7 +47,7 @@ const NavigationBar = () => {
                 isBordered
                 as="button"
                 color="secondary"
-                name="Jason Hughes"
+                name={data.user.name}
                 size="md"
                 src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
               />
@@ -47,10 +55,13 @@ const NavigationBar = () => {
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
+                <p className="font-semibold">{data.user.name}</p>
+              </DropdownItem>
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Email</p>
+                <p className="font-semibold">{data.user.email}</p>
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
               <DropdownItem key="theme">
                 <ThemeSwitch />
               </DropdownItem>
@@ -59,7 +70,13 @@ const NavigationBar = () => {
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem
+                onClick={() => {
+                  router.push("api/auth/signout");
+                }}
+                key="logout"
+                color="danger"
+              >
                 Log Out
               </DropdownItem>
             </DropdownMenu>
