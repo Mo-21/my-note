@@ -20,7 +20,7 @@ const NavigationBar = () => {
     <Navbar isBordered>
       <NavbarContent className="justify-between">
         <NavbarBrand className="flex justify-start flex-grow">
-          <AcmeLogo />
+          <AcmeLogo height={36} width={36} />
           <p className="hidden sm:block font-bold text-inherit ml-2">My Note</p>
         </NavbarBrand>
         <NavbarItem className="flex justify-center flex-grow">
