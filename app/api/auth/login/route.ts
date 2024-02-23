@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LoginSchemaType, loginSchema } from "@/prisma/schema/validationSchema";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/prisma/prisma";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const body: LoginSchemaType = await req.json();

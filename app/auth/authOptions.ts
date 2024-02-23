@@ -1,25 +1,23 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { loginSchema } from "../../prisma/schema/validationSchema";
+import prisma from "@/prisma/prisma";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
+      name: "credentials",
       credentials: {
         email: {
           label: "Email",
-          type: "text",
+          type: "email",
           placeholder: "john.doe@example.com",
         },
         password: { label: "Password", type: "password" },
       },
-
       async authorize(credentials) {
         if (!credentials || Object.keys(credentials).length === 0) {
           console.error("All fields are required");

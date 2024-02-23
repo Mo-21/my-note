@@ -6,10 +6,12 @@ import AuthProvider from "./auth/Provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NextUIProvider>
-      <NextThemesProvider attribute="class" defaultTheme="dark">
-        <AuthProvider>{children}</AuthProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <AuthProvider>
+      <NextUIProvider>
+        <NextThemesProvider attribute="class" defaultTheme="dark">
+          {children}
+        </NextThemesProvider>
+      </NextUIProvider>
+    </AuthProvider>
   );
 }

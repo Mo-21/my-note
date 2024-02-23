@@ -1,9 +1,7 @@
 import { NewNoteType, newNoteSchema } from "@/prisma/schema/noteSchema";
-import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import prisma from "@/prisma/prisma";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
