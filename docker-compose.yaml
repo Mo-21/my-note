@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  mysql:
+    container_name: my-note-mysql
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: my-note
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
