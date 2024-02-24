@@ -6,12 +6,23 @@ import {
   CardBody,
   Skeleton,
   CardFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useGetNotes } from "./hooks/useGetNotes";
 import ErrorCallout from "./components/ErrorCallout";
+import NoteModal from "./components/NoteModal";
+import { useState } from "react";
+import { Note } from "@prisma/client";
 
 const Notes = () => {
+  const [activeNote, setActiveNote] = useState<Note | null>(null);
   const { data: notes, isLoading, error } = useGetNotes();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleOpenModal = (note: Note) => {
+    setActiveNote(note);
+    onOpen();
+  };
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading)
@@ -36,7 +47,10 @@ const Notes = () => {
             ) : (
               ""
             )}
-            <CardBody className="flex-grow">
+            <CardBody
+              onClick={() => handleOpenModal(note)}
+              className="flex-grow"
+            >
               <p>{note.content}</p>
             </CardBody>
             <Divider />
@@ -45,6 +59,16 @@ const Notes = () => {
                 {note.updatedAt.toString().split("T")[0]}
               </div>
             </CardFooter>
+            {activeNote && (
+              <NoteModal
+                isOpen={isOpen}
+                onClose={() => {
+                  onClose();
+                  setActiveNote(null);
+                }}
+                note={activeNote}
+              />
+            )}{" "}
           </Card>
         ))
       ) : (
