@@ -40,6 +40,8 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
 
   const { refetch } = useGetNotes();
 
+  //TODO: Create a custom hook
+
   const onSubmit: SubmitHandler<NewNoteType> = async (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();

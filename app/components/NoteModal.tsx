@@ -15,7 +15,7 @@ interface NoteModalProps {
   onClose: () => void;
   note: Note;
 }
-
+//TODO: shiny modal on light mode
 const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
   return (
     <Modal
@@ -33,6 +33,7 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
           className="w-full overflow-auto prose"
           style={{ maxHeight: "500px" }}
         >
+          {/* //TODO: Fix headers color on black mode */}
           <ReactMarkdown className="text-white">{note.content}</ReactMarkdown>
         </ModalBody>
         <ModalFooter>
