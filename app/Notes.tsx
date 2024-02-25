@@ -13,6 +13,7 @@ import ErrorCallout from "./components/ErrorCallout";
 import NoteModal from "./components/NoteModal";
 import { useState } from "react";
 import { Note } from "@prisma/client";
+import NotesSkeleton from "./components/NotesSkeleton";
 
 const Notes = () => {
   const [activeNote, setActiveNote] = useState<Note | null>(null);
@@ -25,14 +26,7 @@ const Notes = () => {
   };
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
-  if (isLoading)
-    return (
-      <div className="w-screen flex flex-col gap-2 mt-5">
-        <Skeleton className="h-3 w-full rounded-lg" />
-        <Skeleton className="h-3 w-full rounded-lg" />
-        <Skeleton className="h-3 w-full rounded-lg" />
-      </div>
-    );
+  if (isLoading) return <NotesSkeleton />;
 
   return (
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
