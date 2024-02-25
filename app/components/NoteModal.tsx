@@ -15,11 +15,11 @@ interface NoteModalProps {
   onClose: () => void;
   note: Note;
 }
-//TODO: shiny modal on light mode
+
 const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
   return (
     <Modal
-      backdrop="blur"
+      backdrop="transparent"
       isOpen={isOpen}
       onClose={onClose}
       size="5xl"
@@ -34,7 +34,7 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
           style={{ maxHeight: "500px" }}
         >
           {/* //TODO: Fix headers color on black mode */}
-          <ReactMarkdown className="text-white">{note.content}</ReactMarkdown>
+          <ReactMarkdown>{note.content}</ReactMarkdown>
         </ModalBody>
         <ModalFooter>
           <Button color="danger" variant="light" onPress={onClose}>
