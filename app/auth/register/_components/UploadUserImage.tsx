@@ -48,6 +48,8 @@ const UploadUserImage = ({ setValue }: UploadPageProps) => {
           sources: ["local"],
           maxFiles: 1,
           multiple: false,
+          resourceType: "image",
+          cropping: true,
           croppingAspectRatio: 1,
           showSkipCropButton: false,
         }}
