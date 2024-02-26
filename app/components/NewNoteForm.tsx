@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetNotes } from "../hooks/useGetNotes";
+import { useCreateNote } from "../hooks/useCreateNote";
 
 interface NewNoteFormProps {
   isOpen: boolean;
@@ -26,8 +27,6 @@ const Editor = dynamic(() => import("react-simplemde-editor"), {
 });
 
 const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
     register,
     control,
@@ -38,35 +37,18 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
     resolver: zodResolver(newNoteSchema),
   });
 
-  const { refetch } = useGetNotes();
+  const { setData, isSubmitting } = useCreateNote();
 
-  //TODO: Create a custom hook
-
-  const onSubmit: SubmitHandler<NewNoteType> = async (data, e) => {
+  const onSubmit: SubmitHandler<NewNoteType> = (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
 
-    setIsSubmitting(true);
     try {
-      await fetch("/api/note/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .catch(() => {
-          toast.error("Something went wrong");
-        })
-        .finally(() => {
-          toast.success("New note created");
-          setIsSubmitting(false);
-          reset();
-          refetch();
-          onClose();
-        });
-    } catch (error) {
-      toast.error("Something went wrong");
+      setData(data);
+    } finally {
+      toast.success("New note created");
+      reset();
+      onClose();
     }
   };
 
