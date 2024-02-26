@@ -9,7 +9,6 @@ import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  Avatar,
 } from "@nextui-org/react";
 import React from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
@@ -18,6 +17,9 @@ import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import NavbarSkeleton from "./NavbarSkeleton";
+import defaultImage from "@/app/assets/default.png";
+import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 
 const NavigationBar = () => {
   const router = useRouter();
@@ -44,14 +46,22 @@ const NavigationBar = () => {
         <NavbarItem className="flex justify-center flex-grow">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                color="secondary"
-                name={data.user.name}
-                size="md"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              />
+              {data.user.image ? (
+                <CldImage
+                  width="80"
+                  height="80"
+                  crop="fill"
+                  className="w-12 h-12 rounded-full cursor-pointer"
+                  src={data.user.image}
+                  alt="user-image"
+                />
+              ) : (
+                <Image
+                  className="w-12 h-12 rounded-full cursor-pointer"
+                  src={defaultImage}
+                  alt="user-image"
+                />
+              )}
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
