@@ -2,6 +2,7 @@
 
 import { AcmeLogo } from "@/app/assets/AcmeLogo";
 import ErrorCallout from "@/app/components/ErrorCallout";
+import useRegisterUser from "@/app/hooks/useRegisterUser";
 import {
   SignUpSchemaType,
   signUpSchema,
@@ -9,13 +10,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 
 const Registration = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -26,27 +24,19 @@ const Registration = () => {
     mode: "onChange",
   });
 
+  const { registerUser, isError, isSubmitting } = useRegisterUser();
   const router = useRouter();
 
   const formSubmit: SubmitHandler<SignUpSchemaType> = async (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
 
-    setIsSubmitting(true);
-    try {
-      await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).finally(() => {
-        setIsSubmitting(false);
-        router.push("/api/auth/signin");
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong, please try again.");
+    const isSuccess = await registerUser(data);
+    if (isSuccess) {
+      toast.success("User registered successfully");
+      router.push("/api/auth/signin");
+    } else if (isError !== null) {
+      toast.error(isError);
     }
   };
 
