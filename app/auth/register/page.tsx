@@ -42,10 +42,6 @@ const Registration = () => {
     }
   };
 
-  const handleBlur = (fieldName: keyof SignUpSchemaType) => () => {
-    clearErrors(fieldName);
-  };
-
   return (
     <div className="flex items-center justify-center h-screen">
       <form
@@ -55,9 +51,9 @@ const Registration = () => {
         <AcmeLogo height={130} width={130} />
         <UploadUserImage setValue={setValue} />
         <RegistrationInputFields
-          handleBlur={handleBlur}
           register={register}
           errors={errors}
+          clearErrors={clearErrors}
         />
         <Button
           type="submit"

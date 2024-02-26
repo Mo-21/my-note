@@ -2,19 +2,27 @@ import ErrorCallout from "@/app/components/ErrorCallout";
 import { SignUpSchemaType } from "@/prisma/schema/validationSchema";
 import { Input } from "@nextui-org/react";
 import React from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormClearErrors,
+} from "react-hook-form";
 
 interface RegistrationInputFieldsProps {
-  handleBlur: (fieldName: keyof SignUpSchemaType) => () => void;
   register: UseFormRegister<SignUpSchemaType>;
   errors: FieldErrors<SignUpSchemaType>;
+  clearErrors: UseFormClearErrors<SignUpSchemaType>;
 }
 
 const RegistrationInputFields = ({
-  handleBlur,
   register,
   errors,
+  clearErrors,
 }: RegistrationInputFieldsProps) => {
+  const handleBlur = (fieldName: keyof SignUpSchemaType) => () => {
+    clearErrors(fieldName);
+  };
+
   const fields: {
     name: "name" | "email" | "password" | "passwordConfirmation" | "avatar";
     type: string;
