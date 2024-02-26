@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          <main className="h-screen w-screen">{children}</main>
+          <main className="h-screen">{children}</main>
         </Providers>
       </body>
     </html>

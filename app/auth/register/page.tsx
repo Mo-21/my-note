@@ -55,7 +55,7 @@ const Registration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen">
+    <div className="flex items-center justify-center h-screen">
       <form
         onSubmit={handleSubmit(formSubmit)}
         className="flex flex-col items-center gap-3 border-2 border-solid p-20 border-[#27272a] rounded-full"
