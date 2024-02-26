@@ -58,6 +58,15 @@ const MarkdownViewer = ({ children }: { children: string }) => {
     h2: ({ ...props }) => (
       <h2 style={{ color: theme === "dark" ? "white" : "black" }} {...props} />
     ),
+    h3: ({ ...props }) => (
+      <h3 style={{ color: theme === "dark" ? "white" : "black" }} {...props} />
+    ),
+    h4: ({ ...props }) => (
+      <h4 style={{ color: theme === "dark" ? "white" : "black" }} {...props} />
+    ),
+    h5: ({ ...props }) => (
+      <h5 style={{ color: theme === "dark" ? "white" : "black" }} {...props} />
+    ),
 
     // Customizing blockquotes
     blockquote: ({ ...props }) => (
@@ -74,6 +83,14 @@ const MarkdownViewer = ({ children }: { children: string }) => {
           color: theme === "dark" ? "cyan" : "blue",
           textDecoration: "underline",
         }}
+        {...props}
+      />
+    ),
+
+    //customizing strong text
+    strong: ({ ...props }) => (
+      <strong
+        style={{ color: theme === "dark" ? "white" : "black" }}
         {...props}
       />
     ),
