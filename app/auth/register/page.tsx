@@ -12,12 +12,14 @@ import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import UploadUserImage from "./_components/UploadUserImage";
 
 const Registration = () => {
   const {
     register,
     handleSubmit,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
@@ -51,6 +53,8 @@ const Registration = () => {
         className="flex flex-col items-center gap-3 border-2 border-solid p-20 border-[#27272a] rounded-full"
       >
         <AcmeLogo height={130} width={130} />
+
+        <UploadUserImage setValue={setValue} />
         <Input
           type="text"
           placeholder="Name"
