@@ -9,8 +9,11 @@ const AddNewNote = () => {
 
   return (
     <div>
-      <div className="flex justify-center px-4 mt-3" onClick={() => onOpen()}>
-        <div className="max-w-[740px] w-full h-max rounded-2xl flex justify-center items-center text-white shadow-sm backdrop-blur dark:bg-black/30">
+      <div className="flex justify-center px-4 mt-3">
+        <div
+          onClick={() => onOpen()}
+          className="max-w-[740px] w-full h-max rounded-2xl flex justify-center items-center text-white shadow-sm backdrop-blur dark:bg-black/30"
+        >
           <Input
             isClearable
             readOnly={true}
