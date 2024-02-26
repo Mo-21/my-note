@@ -13,6 +13,9 @@ export async function GET(req: NextRequest) {
         email: session.user.email,
       },
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return NextResponse.json(notes, { status: 201 });
