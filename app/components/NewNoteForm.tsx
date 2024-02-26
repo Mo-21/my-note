@@ -11,10 +11,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
-import { useGetNotes } from "../hooks/useGetNotes";
 import { useCreateNote } from "../hooks/useCreateNote";
 
 interface NewNoteFormProps {
@@ -27,13 +24,7 @@ const Editor = dynamic(() => import("react-simplemde-editor"), {
 });
 
 const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<NewNoteType>({
+  const { register, control, handleSubmit, reset } = useForm<NewNoteType>({
     resolver: zodResolver(newNoteSchema),
   });
 
@@ -43,13 +34,9 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
     e?.preventDefault();
     e?.stopPropagation();
 
-    try {
-      setData(data);
-    } finally {
-      toast.success("New note created");
-      reset();
-      onClose();
-    }
+    setData(data);
+    reset();
+    onClose();
   };
 
   return (
@@ -94,7 +81,6 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
           </ModalFooter>
         </form>
       </ModalContent>
-      <Toaster />
     </Modal>
   );
 };
