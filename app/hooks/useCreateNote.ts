@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
-import { useGetNotes } from "./useGetNotes";
+import { useGetInfiniteNotes } from "./useGetNotes";
 
 interface NewNoteType {
   content: string;
   title?: string | null | undefined;
 }
 
+//TODO: use react-query to mutate
 export const useCreateNote = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [data, setData] = useState<NewNoteType>({ title: "", content: "" });
+  const [data, setData] = useState<NewNoteType | null>(null);
 
-  const { refetch } = useGetNotes();
+  const { refetch } = useGetInfiniteNotes();
 
   useEffect(() => {
     const fetchNotes = async () => {
+      if (data === null || data === undefined) return;
+
       setIsSubmitting(true);
 
       try {
