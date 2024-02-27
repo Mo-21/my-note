@@ -21,6 +21,7 @@ import defaultImage from "@/app/assets/default.png";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 
+//TODO: FIX IMPORT STATEMENTS
 const NavigationBar = () => {
   const router = useRouter();
   const { data } = useSession();
