@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
   const body: LoginSchemaType = await req.json();
-  console.log(body);
   if (!body || Object.keys(body).length === 0)
     return NextResponse.json(
       { message: "All fields are required" },
