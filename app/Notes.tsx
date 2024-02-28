@@ -14,22 +14,16 @@ import { useEffect, useState } from "react";
 import { Note } from "@prisma/client";
 import NotesSkeleton from "./components/NotesSkeleton";
 import { useInView } from "react-intersection-observer";
+import { useNotesContext } from "./hooks/useNotesContext";
 
-interface NotesProps {
-  notes: Note[];
-  isLoading: boolean;
-  error: Error | null;
-  fetchNextPage: any;
-  isFetchingNextPage: boolean;
-}
-
-const Notes = ({
-  notes,
-  isLoading,
-  error,
-  fetchNextPage,
-  isFetchingNextPage,
-}: NotesProps) => {
+const Notes = () => {
+  const {
+    filteredNotes: notes,
+    isLoading,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useNotesContext();
   const { ref, inView } = useInView();
 
   useEffect(() => {

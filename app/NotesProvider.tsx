@@ -8,22 +8,34 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useGetInfiniteNotes } from "./hooks/useGetNotes";
 
 interface NotesContextType {
   filteredNotes: Note[];
-  setNotes: Dispatch<SetStateAction<Note[]>>;
+  isLoading: boolean;
+  error: Error | null;
+  fetchNextPage: any;
+  isFetchingNextPage: boolean;
   setQuery: Dispatch<SetStateAction<string>>;
 }
 
 export const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
 
 export const NotesProvider = ({ children }: PropsWithChildren) => {
-  const [notes, setNotes] = useState<Note[]>([]);
   const [query, setQuery] = useState<string>("");
 
+  const {
+    data: notes,
+    isLoading,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetInfiniteNotes();
+
   const filteredNotes = useMemo(() => {
-    if (!query) return notes;
-    return notes.filter((note) => {
+    if (!notes?.data) return [];
+    if (!query) return notes.data;
+    return notes?.data.filter((note) => {
       return (
         note.title?.toLowerCase().includes(query.toLowerCase()) ||
         note.content.toLowerCase().includes(query.toLowerCase())
@@ -32,7 +44,16 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
   }, [notes, query]);
 
   return (
-    <NotesCtx.Provider value={{ filteredNotes, setNotes, setQuery }}>
+    <NotesCtx.Provider
+      value={{
+        filteredNotes,
+        setQuery,
+        isLoading,
+        error,
+        fetchNextPage,
+        isFetchingNextPage,
+      }}
+    >
       {children}
     </NotesCtx.Provider>
   );
