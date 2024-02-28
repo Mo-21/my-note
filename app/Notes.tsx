@@ -11,7 +11,7 @@ import ErrorCallout from "./components/ErrorCallout";
 import NoteModal from "./components/NoteModal";
 import { useEffect, useState } from "react";
 import { Note } from "@prisma/client";
-import NotesSkeleton from "./components/NotesSkeleton";
+import NotesSkeleton from "./skeletons/NotesSkeleton";
 import { useInView } from "react-intersection-observer";
 import { useNotesContext } from "./hooks/useNotesContext";
 

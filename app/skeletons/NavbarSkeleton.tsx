@@ -10,8 +10,8 @@ import {
   DropdownItem,
   Skeleton,
 } from "@nextui-org/react";
-import { AcmeLogo } from "./assets/AcmeLogo";
-import { SearchIcon } from "./assets/SearchIcon";
+import { AcmeLogo } from "../assets/AcmeLogo";
+import { SearchIcon } from "../assets/SearchIcon";
 
 const NavbarSkeleton = () => {
   return (

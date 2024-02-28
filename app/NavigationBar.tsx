@@ -13,7 +13,7 @@ import { AcmeLogo } from "./assets/AcmeLogo";
 import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import NavbarSkeleton from "./NavbarSkeleton";
+import NavbarSkeleton from "./skeletons/NavbarSkeleton";
 import defaultImage from "@/app/assets/default.png";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
