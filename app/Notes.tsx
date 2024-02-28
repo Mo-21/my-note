@@ -15,15 +15,21 @@ import { Note } from "@prisma/client";
 import NotesSkeleton from "./components/NotesSkeleton";
 import { useInView } from "react-intersection-observer";
 
-const Notes = () => {
-  const {
-    data: notes,
-    isLoading,
-    error,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useGetInfiniteNotes();
+interface NotesProps {
+  notes: Note[];
+  isLoading: boolean;
+  error: Error | null;
+  fetchNextPage: any;
+  isFetchingNextPage: boolean;
+}
 
+const Notes = ({
+  notes,
+  isLoading,
+  error,
+  fetchNextPage,
+  isFetchingNextPage,
+}: NotesProps) => {
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -35,9 +41,9 @@ const Notes = () => {
 
   return (
     <div className="flex flex-col items-center">
-      {notes?.data && notes?.data.length > 0 ? (
+      {notes && notes.length > 0 ? (
         <>
-          <NotesList notes={notes.data} />
+          <NotesList notes={notes} />
           <div className="mt-3" ref={ref}>
             {isFetchingNextPage && "Loading..."}
           </div>

@@ -10,7 +10,7 @@ import {
   Dropdown,
   DropdownMenu,
 } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
 import { SearchIcon } from "./assets/SearchIcon";
 import ThemeSwitch from "./ThemeSwitch";
@@ -20,11 +20,15 @@ import NavbarSkeleton from "./NavbarSkeleton";
 import defaultImage from "@/app/assets/default.png";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
+import { useNotesContext } from "./hooks/useNotesContext";
 
 //TODO: FIX IMPORT STATEMENTS
 const NavigationBar = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
   const { data } = useSession();
+
+  const { setQuery } = useNotesContext();
 
   if (!data || !data.user || !data.user.name) return <NavbarSkeleton />;
 
@@ -42,6 +46,11 @@ const NavigationBar = () => {
             size="sm"
             startContent={<SearchIcon />}
             type="search"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setQuery(e.target.value);
+            }}
           />
         </NavbarItem>
         <NavbarItem className="flex justify-center flex-grow">
