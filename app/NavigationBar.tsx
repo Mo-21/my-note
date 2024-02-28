@@ -4,15 +4,12 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Input,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
 } from "@nextui-org/react";
-import React, { useState } from "react";
 import { AcmeLogo } from "./assets/AcmeLogo";
-import { SearchIcon } from "./assets/SearchIcon";
 import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -20,15 +17,13 @@ import NavbarSkeleton from "./NavbarSkeleton";
 import defaultImage from "@/app/assets/default.png";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
-import { useNotesContext } from "./hooks/useNotesContext";
+import SearchInput from "./components/SearchInput";
 
+//TODO: Remove DropDown
 //TODO: FIX IMPORT STATEMENTS
 const NavigationBar = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
   const { data } = useSession();
-
-  const { setQuery } = useNotesContext();
 
   if (!data || !data.user || !data.user.name) return <NavbarSkeleton />;
 
@@ -40,18 +35,7 @@ const NavigationBar = () => {
           <p className="hidden sm:block font-bold text-inherit ml-2">My Note</p>
         </NavbarBrand>
         <NavbarItem className="flex justify-center flex-grow">
-          <Input
-            fullWidth
-            placeholder="Type to search..."
-            size="sm"
-            startContent={<SearchIcon />}
-            type="search"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setQuery(e.target.value);
-            }}
-          />
+          <SearchInput />
         </NavbarItem>
         <NavbarItem className="flex justify-center flex-grow">
           <Dropdown placement="bottom-end">
