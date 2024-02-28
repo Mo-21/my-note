@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useGetInfiniteNotes } from "./hooks/useGetNotes";
+import { useGetInfiniteNotes } from "../hooks/useGetNotes";
 
 interface NotesContextType {
   filteredNotes: Note[];

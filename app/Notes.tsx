@@ -7,7 +7,6 @@ import {
   CardFooter,
   useDisclosure,
 } from "@nextui-org/react";
-import { useGetInfiniteNotes } from "./hooks/useGetNotes";
 import ErrorCallout from "./components/ErrorCallout";
 import NoteModal from "./components/NoteModal";
 import { useEffect, useState } from "react";
