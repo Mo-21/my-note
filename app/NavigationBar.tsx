@@ -48,6 +48,7 @@ const NavigationBar = () => {
                   className="w-12 h-12 rounded-full cursor-pointer"
                   src={data.user.image}
                   alt="user-image"
+                  priority={true}
                 />
               ) : (
                 <Image
