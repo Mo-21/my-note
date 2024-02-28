@@ -1,10 +1,10 @@
+"use client";
 import { Note } from "@prisma/client";
 import {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
   createContext,
-  useContext,
   useMemo,
   useState,
 } from "react";
@@ -15,9 +15,7 @@ interface NotesContextType {
   setQuery: Dispatch<SetStateAction<string>>;
 }
 
-const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
-
-export const useNotesContext = () => useContext(NotesCtx);
+export const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
 
 export const NotesProvider = ({ children }: PropsWithChildren) => {
   const [notes, setNotes] = useState<Note[]>([]);
