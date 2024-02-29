@@ -119,7 +119,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               note={activeNote}
             />
           )}
-          {editActive && (
+          {activeNote && (
             <NewNoteForm
               isOpen={editActive}
               onClose={() => {
