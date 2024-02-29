@@ -21,7 +21,7 @@ const AddNewNote = () => {
             placeholder="New Note..."
           />
         </div>
-        <NewNoteForm isOpen={isOpen} onClose={onClose} />
+        <NewNoteForm isOpen={isOpen} onClose={onClose} isUpdating={false} />
       </div>
     </div>
   );

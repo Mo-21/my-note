@@ -6,6 +6,12 @@ interface NewNoteType {
   title?: string | null | undefined;
 }
 
+interface UpdatedNoteType {
+  id: number;
+  content: string;
+  title?: string | null | undefined;
+}
+
 interface ApiResponse {
   data: Note[];
   nextCursor: string | null;
@@ -35,11 +41,25 @@ const fetchNewNote = async (payload: NewNoteType): Promise<Note> => {
   return data;
 };
 
-const useCreateNote = () => {
+const updateNote = async (payload: UpdatedNoteType): Promise<Note> => {
+  const response = await fetch("/api/note/edit", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  return data;
+};
+
+const useCreateAndUpdateNote = (isUpdating: boolean) => {
   const queryClient = useQueryClient();
   return useMutation<Note, Error, Note, ContextType>({
     mutationKey: ["infinite_notes"],
-    mutationFn: fetchNewNote,
+    mutationFn: isUpdating ? updateNote : fetchNewNote,
     onMutate: async (newNote) => {
       const previousNotes = queryClient.getQueryData<MutationDataType>([
         "infinite_notes",
@@ -85,4 +105,4 @@ const useCreateNote = () => {
     },
   });
 };
-export default useCreateNote;
+export default useCreateAndUpdateNote;

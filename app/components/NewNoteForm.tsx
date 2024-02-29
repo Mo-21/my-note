@@ -12,37 +12,45 @@ import {
 } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import useCreateNote from "../hooks/useCreateNote";
-import { useSession } from "next-auth/react";
+import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
+import { Note } from "@prisma/client";
 
 interface NewNoteFormProps {
   isOpen: boolean;
   onClose: () => void;
+  note?: Note | null;
+  isUpdating: boolean;
 }
 
 const Editor = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
 });
 
-const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
+const NewNoteForm = ({
+  isOpen,
+  onClose,
+  note,
+  isUpdating,
+}: NewNoteFormProps) => {
   const { register, control, handleSubmit, reset } = useForm<NewNoteType>({
     resolver: zodResolver(newNoteSchema),
   });
 
-  const { mutate } = useCreateNote();
+  const { mutate } = useCreateAndUpdateNote(isUpdating);
 
   const onSubmit: SubmitHandler<NewNoteType> = (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
 
     mutate({
-      id: -1,
+      id: note ? note.id : -1,
       title: data.title ? data.title : "",
       content: data.content,
       userId: -1,
-      createdAt: new Date(),
+      createdAt: note ? note.createdAt : new Date(),
       updatedAt: new Date(),
     });
+
     reset();
     onClose();
   };
@@ -60,7 +68,13 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
       <ModalContent className="p-3 w-full">
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalHeader className="flex flex-col gap-1">
-            <Input type="text" label="Title" size="sm" {...register("title")} />
+            <Input
+              defaultValue={note?.title || undefined}
+              type="text"
+              label="Title"
+              size="sm"
+              {...register("title")}
+            />
           </ModalHeader>
           <ModalBody
             className="w-full overflow-auto"
@@ -69,6 +83,7 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
             <Controller
               name="content"
               control={control}
+              defaultValue={note?.content}
               render={({ field }) => (
                 <Editor placeholder="Note" options={options} {...field} />
               )}
@@ -79,7 +94,7 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
               Close
             </Button>
             <Button type="submit" color="primary">
-              Create
+              {note ? "Update" : "Create"}
             </Button>
           </ModalFooter>
         </form>
