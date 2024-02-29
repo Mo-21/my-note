@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useGetInfiniteNotes } from "./useGetNotes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Note } from "@prisma/client";
 
