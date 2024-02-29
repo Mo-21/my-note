@@ -18,6 +18,8 @@ import { useNotesContext } from "./hooks/useNotesContext";
 import deleteIcon from "@/app/assets/delete-icon.svg";
 import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
+import useDeleteNote from "./hooks/useDeleteNote";
+import { Toaster } from "react-hot-toast";
 
 const Notes = () => {
   const {
@@ -57,6 +59,8 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const deleteNote = useDeleteNote();
+
   const handleOpenModal = (note: Note) => {
     setActiveNote(note);
     onOpen();
@@ -91,10 +95,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
                   e.preventDefault;
                   e.stopPropagation;
 
-                  await fetch("/api/note/delete", {
-                    method: "DELETE",
-                    body: JSON.stringify(note.id),
-                  });
+                  await deleteNote.mutateAsync(note.id);
                 }}
               >
                 <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
@@ -113,6 +114,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           )}
         </Card>
       ))}
+      <Toaster />
     </div>
   );
 };
