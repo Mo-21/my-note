@@ -59,7 +59,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const deleteNote = useDeleteNote();
+  const { mutate } = useDeleteNote();
 
   const handleOpenModal = (note: Note) => {
     setActiveNote(note);
@@ -88,16 +88,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               <Button isIconOnly size="sm">
                 <Image className="w-4" src={editIcon} alt="editIcon" />
               </Button>
-              <Button
-                isIconOnly
-                size="sm"
-                onClick={async (e) => {
-                  e.preventDefault;
-                  e.stopPropagation;
-
-                  await deleteNote.mutateAsync(note.id);
-                }}
-              >
+              <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
                 <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
               </Button>
             </div>
