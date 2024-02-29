@@ -12,7 +12,8 @@ import {
 } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useCreateNote } from "../hooks/useCreateNote";
+import useCreateNote from "../hooks/useCreateNote";
+import { useSession } from "next-auth/react";
 
 interface NewNoteFormProps {
   isOpen: boolean;
@@ -28,13 +29,20 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
     resolver: zodResolver(newNoteSchema),
   });
 
-  const { setData, isSubmitting } = useCreateNote();
+  const { mutate } = useCreateNote();
 
   const onSubmit: SubmitHandler<NewNoteType> = (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
 
-    setData(data);
+    mutate({
+      id: -1,
+      title: data.title ? data.title : "",
+      content: data.content,
+      userId: -1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
     reset();
     onClose();
   };
@@ -70,12 +78,7 @@ const NewNoteForm = ({ isOpen, onClose }: NewNoteFormProps) => {
             <Button color="danger" variant="light" onPress={onClose}>
               Close
             </Button>
-            <Button
-              isLoading={isSubmitting}
-              disabled={isSubmitting}
-              type="submit"
-              color="primary"
-            >
+            <Button type="submit" color="primary">
               Create
             </Button>
           </ModalFooter>
