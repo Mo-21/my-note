@@ -6,6 +6,7 @@ import {
   CardBody,
   CardFooter,
   useDisclosure,
+  Button,
 } from "@nextui-org/react";
 import ErrorCallout from "./components/ErrorCallout";
 import NoteModal from "./components/NoteModal";
@@ -14,6 +15,9 @@ import { Note } from "@prisma/client";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
 import { useInView } from "react-intersection-observer";
 import { useNotesContext } from "./hooks/useNotesContext";
+import deleteIcon from "@/app/assets/delete-icon.svg";
+import editIcon from "@/app/assets/edit-icon.svg";
+import Image from "next/image";
 
 const Notes = () => {
   const {
@@ -72,9 +76,29 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             <p>{note.content}</p>
           </CardBody>
           <Divider />
-          <CardFooter className="mt-auto">
+          <CardFooter className="flex justify-between items-center mt-auto">
             <div className="text-sm">
               {note.updatedAt.toString().split("T")[0]}
+            </div>
+            <div className="flex items-center gap-1">
+              <Button isIconOnly size="sm">
+                <Image className="w-4" src={editIcon} alt="editIcon" />
+              </Button>
+              <Button
+                isIconOnly
+                size="sm"
+                onClick={async (e) => {
+                  e.preventDefault;
+                  e.stopPropagation;
+
+                  await fetch("/api/note/delete", {
+                    method: "DELETE",
+                    body: JSON.stringify(note.id),
+                  });
+                }}
+              >
+                <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
+              </Button>
             </div>
           </CardFooter>
           {activeNote && (
