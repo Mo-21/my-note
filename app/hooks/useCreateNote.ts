@@ -62,28 +62,7 @@ const useCreateNote = () => {
       return { oldNotes: previousNotes.pages[0].data };
     },
     onSuccess: (newNote, previousNote) => {
-      queryClient.setQueryData<MutationDataType>(
-        ["infinite_notes"],
-        (mutationData) => {
-          if (!mutationData) return mutationData;
-
-          const updatedData: MutationDataType = {
-            ...mutationData,
-            pages: [
-              {
-                data: mutationData.pages[0].data.map((note) =>
-                  note.id === previousNote.id ? newNote : note
-                ),
-                hasMore: mutationData.pages[0].hasMore,
-                nextCursor: mutationData.pages[0].nextCursor,
-              },
-              ...mutationData.pages.slice(1),
-            ],
-          };
-
-          return updatedData;
-        }
-      );
+      queryClient.invalidateQueries({ queryKey: ["infinite_notes"] });
     },
     onError: (error, newNote, ctx) => {
       if (!ctx) return;
