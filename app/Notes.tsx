@@ -20,6 +20,7 @@ import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
 import useDeleteNote from "./hooks/useDeleteNote";
 import { Toaster } from "react-hot-toast";
+import NewNoteForm from "./components/NewNoteForm";
 
 const Notes = () => {
   const {
@@ -56,14 +57,21 @@ const Notes = () => {
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const [activeNote, setActiveNote] = useState<Note | null>(null);
+  const [editActive, setEditActive] = useState(false);
+  const [previewActive, setPreviewActive] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { mutate } = useDeleteNote();
 
-  const handleOpenModal = (note: Note) => {
+  const handleOpenPreviewModal = (note: Note) => {
     setActiveNote(note);
-    onOpen();
+    setPreviewActive(true);
+  };
+
+  const handleOpenEditModal = (note: Note) => {
+    setActiveNote(note);
+    setEditActive(true);
   };
 
   return (
@@ -76,7 +84,10 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               <Divider />
             </>
           )}
-          <CardBody onClick={() => handleOpenModal(note)} className="flex-grow">
+          <CardBody
+            onClick={() => handleOpenPreviewModal(note)}
+            className="flex-grow"
+          >
             <p>{note.content}</p>
           </CardBody>
           <Divider />
@@ -85,7 +96,11 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               {note.updatedAt.toString().split("T")[0]}
             </div>
             <div className="flex items-center gap-1">
-              <Button isIconOnly size="sm">
+              <Button
+                onClick={() => handleOpenEditModal(note)}
+                isIconOnly
+                size="sm"
+              >
                 <Image className="w-4" src={editIcon} alt="editIcon" />
               </Button>
               <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
@@ -95,12 +110,25 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           </CardFooter>
           {activeNote && (
             <NoteModal
-              isOpen={isOpen}
+              isOpen={previewActive}
               onClose={() => {
                 onClose();
                 setActiveNote(null);
+                setPreviewActive(false);
               }}
               note={activeNote}
+            />
+          )}
+          {editActive && (
+            <NewNoteForm
+              isOpen={editActive}
+              onClose={() => {
+                setActiveNote(null);
+                setEditActive(false);
+                onClose();
+              }}
+              note={activeNote}
+              isUpdating={editActive}
             />
           )}
         </Card>
