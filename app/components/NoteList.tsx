@@ -39,7 +39,11 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             onClick={() => dispatch({ type: "PREVIEW", payload: note })}
             className="flex-grow"
           >
-            <p>{note.content}</p>
+            <p>
+              {note.content.length < 100
+                ? note.content
+                : note.content.slice(0, 101) + "..."}
+            </p>
           </CardBody>
           <Divider />
           <CardFooter className="flex justify-between items-center mt-auto">
