@@ -57,7 +57,7 @@ const NewNoteForm = ({
 
   return (
     <Modal
-      backdrop="blur"
+      backdrop="transparent"
       isOpen={isOpen}
       onClose={onClose}
       size="5xl"
