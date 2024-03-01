@@ -16,6 +16,7 @@ import NoteModal from "./NoteModal";
 import deleteIcon from "@/app/assets/delete-icon.svg";
 import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
+import { Toaster } from "react-hot-toast";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const { mutate } = useDeleteNote();
@@ -83,6 +84,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           )}
         </Card>
       ))}
+      <Toaster />
     </div>
   );
 };
