@@ -5,12 +5,11 @@ import {
   Divider,
   CardBody,
   CardFooter,
-  useDisclosure,
   Button,
 } from "@nextui-org/react";
 import ErrorCallout from "./components/ErrorCallout";
 import NoteModal from "./components/NoteModal";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Note } from "@prisma/client";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
 import { useInView } from "react-intersection-observer";
@@ -19,8 +18,8 @@ import deleteIcon from "@/app/assets/delete-icon.svg";
 import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
 import useDeleteNote from "./hooks/useDeleteNote";
-import { Toaster } from "react-hot-toast";
 import NewNoteForm from "./components/NewNoteForm";
+import { openModalReducer } from "./reducers/openModalReducer";
 
 const Notes = () => {
   const {
@@ -56,24 +55,14 @@ const Notes = () => {
 };
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
-  const [activeNote, setActiveNote] = useState<Note | null>(null);
-  const [editActive, setEditActive] = useState(false);
-  const [previewActive, setPreviewActive] = useState(false);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { mutate } = useDeleteNote();
+  const [state, dispatch] = useReducer(openModalReducer, {
+    activeNote: null,
+    editActive: false,
+    previewActive: false,
+  });
 
-  const handleOpenPreviewModal = (note: Note) => {
-    setActiveNote(note);
-    setPreviewActive(true);
-  };
-
-  const handleOpenEditModal = (note: Note) => {
-    setActiveNote(note);
-    setEditActive(true);
-  };
-
+  console.log(state.activeNote);
   return (
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
       {notes.map((note, index) => (
@@ -85,7 +74,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             </>
           )}
           <CardBody
-            onClick={() => handleOpenPreviewModal(note)}
+            onClick={() => dispatch({ type: "PREVIEW", payload: note })}
             className="flex-grow"
           >
             <p>{note.content}</p>
@@ -97,7 +86,11 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             </div>
             <div className="flex items-center gap-1">
               <Button
-                onClick={() => handleOpenEditModal(note)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  dispatch({ type: "EDIT", payload: note });
+                }}
                 isIconOnly
                 size="sm"
               >
@@ -108,32 +101,24 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               </Button>
             </div>
           </CardFooter>
-          {activeNote && (
+          {state.activeNote && (
             <NoteModal
-              isOpen={previewActive}
-              onClose={() => {
-                onClose();
-                setActiveNote(null);
-                setPreviewActive(false);
-              }}
-              note={activeNote}
+              isOpen={state.previewActive}
+              onClose={() => dispatch({ type: "CLOSE" })}
+              note={state.activeNote}
             />
           )}
-          {activeNote && (
+          {state.activeNote && (
             <NewNoteForm
-              isOpen={editActive}
-              onClose={() => {
-                setActiveNote(null);
-                setEditActive(false);
-                onClose();
-              }}
-              note={activeNote}
-              isUpdating={editActive}
+              key={state.activeNote.id}
+              isOpen={state.editActive}
+              onClose={() => dispatch({ type: "CLOSE" })}
+              isUpdating={state.editActive}
+              note={state.activeNote}
             />
           )}
         </Card>
       ))}
-      <Toaster />
     </div>
   );
 };
