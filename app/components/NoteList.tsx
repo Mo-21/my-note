@@ -40,9 +40,11 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             className="flex-grow"
           >
             <p>
-              {note.content.length < 100
-                ? note.content
-                : note.content.slice(0, 101) + "..."}
+              {note.title && note.content.length > 100
+                ? note.content.slice(0, 121) + "..."
+                : !note.title && note.content.length > 100
+                ? note.content.slice(0, 221) + "..."
+                : note.content}
             </p>
           </CardBody>
           <Divider />
@@ -52,11 +54,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             </div>
             <div className="flex items-center gap-1">
               <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  dispatch({ type: "EDIT", payload: note });
-                }}
+                onClick={() => dispatch({ type: "EDIT", payload: note })}
                 isIconOnly
                 size="sm"
               >
@@ -79,7 +77,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               key={state.activeNote.id}
               isOpen={state.editActive}
               onClose={() => dispatch({ type: "CLOSE" })}
-              isUpdating={state.editActive}
+              isUpdating={true}
               note={state.activeNote}
             />
           )}
