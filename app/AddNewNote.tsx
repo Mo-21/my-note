@@ -1,46 +1,46 @@
 "use client";
 import "easymde/dist/easymde.min.css";
-import { useDisclosure, Button, ButtonGroup } from "@nextui-org/react";
+import { Button, ButtonGroup } from "@nextui-org/react";
 import "./globals.css";
 import NewNoteForm from "./components/NewNoteForm";
+import { useReducer } from "react";
+import SimpleNoteForm from "./components/SimpleNoteForm";
+import { createNoteReducer } from "./reducers/createNoteReducer";
 
 const AddNewNote = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [state, dispatch] = useReducer(createNoteReducer, {
+    quickNote: false,
+    editor: false,
+    checkbox: false,
+  });
 
   return (
     <div>
       <div className="flex justify-evenly items-center px-4 mt-3">
-        <CreateNoteButtons onOpen={onOpen} />
-        <NewNoteForm isOpen={isOpen} onClose={onClose} isUpdating={false} />
+        <ButtonGroup variant="ghost" className="flex">
+          <Button onClick={() => dispatch({ type: "QUICK_NOTE" })}>
+            Quick Note
+          </Button>
+          <Button onClick={() => dispatch({ type: "EDITOR" })}>Editor</Button>
+          <Button onClick={() => dispatch({ type: "CHECKBOX" })}>
+            Checkbox
+          </Button>
+        </ButtonGroup>
+        {state.quickNote ? (
+          <SimpleNoteForm />
+        ) : state.editor ? (
+          <NewNoteForm
+            isOpen={true}
+            onClose={() => dispatch({ type: "CLOSE" })}
+            isUpdating={false}
+          />
+        ) : state.checkbox ? (
+          <SimpleNoteForm />
+        ) : (
+          ""
+        )}
       </div>
     </div>
-  );
-};
-
-const CreateNoteButtons = ({ onOpen }: { onOpen: () => void }) => {
-  const buttons: { key: string; value: string; fn?: () => void }[] = [
-    {
-      key: "quick_note",
-      value: "Quick Note",
-    },
-    {
-      key: "quick_note",
-      value: "Editor",
-      fn: () => onOpen(),
-    },
-    {
-      key: "quick_note",
-      value: "Checkbox",
-    },
-  ];
-  return (
-    <ButtonGroup variant="ghost" className="flex">
-      {buttons.map((b) => (
-        <Button onClick={b.fn} key={b.key}>
-          {b.value}
-        </Button>
-      ))}
-    </ButtonGroup>
   );
 };
 
