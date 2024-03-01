@@ -1,10 +1,8 @@
-import {
-  editorNoteSchema,
-  EditorNoteType,
-} from "@/prisma/schema/editorNoteSchema";
+import { editorNoteSchema } from "@/prisma/schema/editorNoteSchema";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/prisma";
+import { NewNoteType } from "@/app/hooks/useCreateAndUpdateNote";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
@@ -12,7 +10,7 @@ export async function POST(req: NextRequest) {
   if (!session || !session.user?.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
-  const body: EditorNoteType = await req.json();
+  const body: NewNoteType = await req.json();
   if (!body)
     return NextResponse.json({ message: "incorrect request" }, { status: 400 });
 
@@ -23,10 +21,12 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
 
+  console.log(body);
   const newNote = await prisma.note.create({
     data: {
       title: body.title,
       content: body.content,
+      NoteType: body.NoteType,
       User: {
         connect: { email: session.user?.email },
       },

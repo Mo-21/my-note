@@ -53,6 +53,7 @@ const NewNoteForm = ({
       title: data.title ? data.title : "",
       content: data.content,
       userId: -1,
+      NoteType: isEditorNote ? "EDITOR" : "QUICK_NOTE",
       createdAt: note ? note.createdAt : new Date(),
       updatedAt: new Date(),
     });
@@ -99,6 +100,7 @@ const NewNoteForm = ({
               <Textarea
                 fullWidth
                 label="Quick Note"
+                defaultValue={note?.content}
                 minRows={20}
                 maxRows={100}
                 style={{

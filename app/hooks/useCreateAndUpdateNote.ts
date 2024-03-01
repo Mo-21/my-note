@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Note } from "@prisma/client";
 
-interface NewNoteType {
+export interface NewNoteType {
   content: string;
   title?: string | null | undefined;
+  NoteType: "EDITOR" | "QUICK_NOTE" | "CHECKBOX";
 }
 
 interface UpdatedNoteType {

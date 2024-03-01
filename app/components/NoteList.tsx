@@ -76,6 +76,9 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           {state.activeNote && (
             <NewNoteForm
               key={state.activeNote.id}
+              isEditorNote={
+                state.activeNote.NoteType === "EDITOR" ? true : false
+              }
               isOpen={state.editActive}
               onClose={() => dispatch({ type: "CLOSE" })}
               isUpdating={true}
