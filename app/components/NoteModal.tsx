@@ -31,7 +31,7 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
       <ModalContent className="p-3 w-full">
         <ModalHeader className="flex flex-col gap-1">{note.title}</ModalHeader>
         <ModalBody
-          className="w-full overflow-auto prose"
+          className="min-w-full overflow-auto prose"
           style={{ maxHeight: "500px" }}
         >
           <MarkdownViewer>{note.content}</MarkdownViewer>
