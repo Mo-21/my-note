@@ -71,7 +71,14 @@ const useCreateAndUpdateNote = (isUpdating: boolean) => {
         ...previousNotes,
         pages: [
           {
-            data: [newNote, ...previousNotes.pages[0].data],
+            data: isUpdating
+              ? [
+                  newNote,
+                  ...previousNotes.pages[0].data.filter(
+                    (note) => note.createdAt !== newNote.createdAt
+                  ),
+                ]
+              : [newNote, ...previousNotes.pages[0].data],
             hasMore: previousNotes.pages[0].hasMore,
             nextCursor: previousNotes.pages[0].nextCursor,
           },
