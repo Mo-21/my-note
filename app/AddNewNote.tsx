@@ -4,7 +4,6 @@ import { Button, ButtonGroup } from "@nextui-org/react";
 import "./globals.css";
 import NewNoteForm from "./components/NewNoteForm";
 import { useReducer } from "react";
-import QuickNoteForm from "./components/QuickNoteForm";
 import { createNoteReducer } from "./reducers/createNoteReducer";
 
 const AddNewNote = () => {
@@ -27,12 +26,15 @@ const AddNewNote = () => {
           </Button>
         </ButtonGroup>
         {state.quickNote ? (
-          <QuickNoteForm
+          <NewNoteForm
+            isEditorNote={state.editor}
             isOpen={true}
             onClose={() => dispatch({ type: "CLOSE" })}
+            isUpdating={false}
           />
         ) : state.editor ? (
           <NewNoteForm
+            isEditorNote={state.editor}
             isOpen={true}
             onClose={() => dispatch({ type: "CLOSE" })}
             isUpdating={false}

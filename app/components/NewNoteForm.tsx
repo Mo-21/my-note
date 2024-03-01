@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Textarea,
   Button,
 } from "@nextui-org/react";
 import dynamic from "next/dynamic";
@@ -23,6 +24,7 @@ interface NewNoteFormProps {
   onClose: () => void;
   note?: Note | null;
   isUpdating: boolean;
+  isEditorNote: boolean;
 }
 
 const Editor = dynamic(() => import("react-simplemde-editor"), {
@@ -34,6 +36,7 @@ const NewNoteForm = ({
   onClose,
   note,
   isUpdating,
+  isEditorNote,
 }: NewNoteFormProps) => {
   const { register, control, handleSubmit, reset } = useForm<EditorNoteType>({
     resolver: zodResolver(editorNoteSchema),
@@ -83,14 +86,27 @@ const NewNoteForm = ({
             className="w-full overflow-auto"
             style={{ maxHeight: "500px" }}
           >
-            <Controller
-              name="content"
-              control={control}
-              defaultValue={note?.content}
-              render={({ field }) => (
-                <Editor placeholder="Note" options={options} {...field} />
-              )}
-            />
+            {isEditorNote ? (
+              <Controller
+                name="content"
+                control={control}
+                defaultValue={note?.content}
+                render={({ field }) => (
+                  <Editor placeholder="Note" options={options} {...field} />
+                )}
+              />
+            ) : (
+              <Textarea
+                fullWidth
+                label="Quick Note"
+                minRows={20}
+                maxRows={100}
+                style={{
+                  fontSize: "18px",
+                }}
+                {...register("content")}
+              />
+            )}
           </ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onClose}>
