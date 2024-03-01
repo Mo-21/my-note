@@ -1,4 +1,7 @@
-import { NewNoteType, newNoteSchema } from "@/prisma/schema/noteSchema";
+import {
+  editorNoteSchema,
+  EditorNoteType,
+} from "@/prisma/schema/editorNoteSchema";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/prisma";
@@ -9,11 +12,11 @@ export async function POST(req: NextRequest) {
   if (!session || !session.user?.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
-  const body: NewNoteType = await req.json();
+  const body: EditorNoteType = await req.json();
   if (!body)
     return NextResponse.json({ message: "incorrect request" }, { status: 400 });
 
-  const noteValidation = newNoteSchema.safeParse(body);
+  const noteValidation = editorNoteSchema.safeParse(body);
   if (!noteValidation.success)
     return NextResponse.json(
       { message: noteValidation.error.format() },

@@ -1,5 +1,8 @@
 "use client";
-import { NewNoteType, newNoteSchema } from "@/prisma/schema/noteSchema";
+import {
+  editorNoteSchema,
+  EditorNoteType,
+} from "@/prisma/schema/editorNoteSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Modal,
@@ -32,13 +35,13 @@ const NewNoteForm = ({
   note,
   isUpdating,
 }: NewNoteFormProps) => {
-  const { register, control, handleSubmit, reset } = useForm<NewNoteType>({
-    resolver: zodResolver(newNoteSchema),
+  const { register, control, handleSubmit, reset } = useForm<EditorNoteType>({
+    resolver: zodResolver(editorNoteSchema),
   });
 
   const { mutate } = useCreateAndUpdateNote(isUpdating);
 
-  const onSubmit: SubmitHandler<NewNoteType> = (data, e) => {
+  const onSubmit: SubmitHandler<EditorNoteType> = (data, e) => {
     e?.preventDefault();
     e?.stopPropagation();
 
