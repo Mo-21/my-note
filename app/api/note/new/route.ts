@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
 
-  console.log(body);
   const newNote = await prisma.note.create({
     data: {
       title: body.title,
