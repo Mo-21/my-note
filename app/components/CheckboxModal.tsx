@@ -5,7 +5,13 @@ interface Todo {
   content: string;
 }
 
-const CheckboxModal = ({ todos }: { todos: Todo[] }) => {
+const CheckboxModal = ({
+  todos,
+  isDisabled,
+}: {
+  todos: Todo[];
+  isDisabled: boolean;
+}) => {
   const selectedValues = todos.filter((t) => t.selected).map((t) => t.content);
 
   return (
@@ -13,7 +19,7 @@ const CheckboxModal = ({ todos }: { todos: Todo[] }) => {
       value={selectedValues}
       lineThrough
       color="success"
-      isDisabled={true}
+      isDisabled={isDisabled}
     >
       {todos.map((t, i) => (
         <Checkbox value={t.content} key={i}>

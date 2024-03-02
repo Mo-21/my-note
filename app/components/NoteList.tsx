@@ -17,6 +17,7 @@ import deleteIcon from "@/app/assets/delete-icon.svg";
 import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
 import { Toaster } from "react-hot-toast";
+import CheckboxModal from "./CheckboxModal";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const { mutate } = useDeleteNote();
@@ -41,11 +42,18 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             className="flex-grow"
           >
             <p>
-              {note.title && note.content.length > 100
-                ? note.content.slice(0, 121) + "..."
-                : !note.title && note.content.length > 100
-                ? note.content.slice(0, 221) + "..."
-                : note.content}
+              {note.NoteType === "CHECKBOX" ? (
+                <CheckboxModal
+                  isDisabled={false}
+                  todos={JSON.parse(note.content)}
+                />
+              ) : note.title && note.content.length > 100 ? (
+                note.content.slice(0, 121) + "..."
+              ) : !note.title && note.content.length > 100 ? (
+                note.content.slice(0, 221) + "..."
+              ) : (
+                note.content
+              )}
             </p>
           </CardBody>
           <Divider />
