@@ -29,6 +29,7 @@ import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
 import { Note } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { RemoveLogo } from "../assets/RemoveLogo";
+import CheckboxModal from "./CheckboxModal";
 
 interface NewNoteFormProps {
   isOpen: boolean;
@@ -60,7 +61,11 @@ const NewNoteForm = ({
     });
 
   const { mutate } = useCreateAndUpdateNote(isUpdating);
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(
+    noteType === "CHECKBOX" && isUpdating && note
+      ? JSON.parse(note.content)
+      : []
+  );
 
   const onSubmit: SubmitHandler<EditorNoteType> = (data, e) => {
     e?.preventDefault();
@@ -107,6 +112,12 @@ const NewNoteForm = ({
           >
             {noteType === "EDITOR" ? (
               <NoteEditor control={control} note={note} />
+            ) : noteType === "CHECKBOX" && isUpdating && note ? (
+              <CheckboxForm
+                setValue={setValue}
+                todos={todos}
+                setTodos={setTodos}
+              />
             ) : noteType === "QUICK_NOTE" ? (
               <NoteTextArea register={register} note={note} />
             ) : (
