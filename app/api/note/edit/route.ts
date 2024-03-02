@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/prisma/prisma";
 
 export async function PATCH(req: NextRequest) {
   const session = await getServerSession();
