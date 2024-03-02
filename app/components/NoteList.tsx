@@ -8,7 +8,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { Note } from "@prisma/client";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { openModalReducer } from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
@@ -26,6 +26,8 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
     editActive: false,
     previewActive: false,
   });
+
+  const [editCounter, setEditCounter] = useState(0);
 
   return (
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
@@ -63,7 +65,10 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             </div>
             <div className="flex items-center gap-1">
               <Button
-                onClick={() => dispatch({ type: "EDIT", payload: note })}
+                onClick={() => {
+                  dispatch({ type: "EDIT", payload: note });
+                  setEditCounter(editCounter + 1);
+                }}
                 isIconOnly
                 size="sm"
               >
@@ -83,11 +88,11 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           )}
           {state.activeNote && (
             <NewNoteForm
-              key={state.activeNote.id}
+              key={`${state.activeNote.id}-${editCounter}`}
               noteType={state.activeNote.NoteType}
               isOpen={state.editActive}
               onClose={() => dispatch({ type: "CLOSE" })}
-              isUpdating={state.editActive}
+              isUpdating={true}
               note={state.activeNote}
             />
           )}
