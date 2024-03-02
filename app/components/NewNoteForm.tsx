@@ -97,9 +97,9 @@ const NewNoteForm = ({
               <NoteTextarea register={register} note={note} />
             ) : (
               <CheckboxForm
-                setValue={setValue}
-                todos={todos}
                 setTodos={setTodos}
+                initialTodos={todos}
+                setValue={setValue}
               />
             )}
           </ModalBody>

@@ -1,34 +1,33 @@
 "use client";
 import { EditorNoteType } from "@/prisma/schema/editorNoteSchema";
 import { Button, CheckboxGroup, Checkbox, Input } from "@nextui-org/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useReducer, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
 import { RemoveLogo } from "../assets/RemoveLogo";
+import { checkboxReducer } from "../reducers/checkboxReducer";
 
 export interface Todo {
   selected: boolean;
   content: string;
 }
 
-//TODO: use reducer
 const CheckboxForm = ({
-  todos,
-  setTodos,
   setValue,
+  initialTodos,
+  setTodos,
 }: {
-  todos: Todo[];
-  setTodos: Dispatch<SetStateAction<Todo[]>>;
   setValue: UseFormSetValue<EditorNoteType>;
+  initialTodos: Todo[];
+  setTodos: Dispatch<SetStateAction<Todo[]>>;
 }) => {
   const [currentTodo, setCurrentTodo] = useState<string>("");
 
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  useEffect(() => {
-    setSelectedValues(todos.filter((t) => t.selected).map((t) => t.content));
-  }, [todos]);
+  const [state, dispatch] = useReducer(checkboxReducer, initialTodos);
 
   const handleAddTodo = () => {
+    if (!currentTodo.trim()) return;
+    dispatch({ type: "ADD", content: currentTodo });
+
     const newTodo = { selected: false, content: currentTodo };
     setTodos((currentTodos) => {
       const updatedTodos = [...currentTodos, newTodo];
@@ -36,30 +35,6 @@ const CheckboxForm = ({
       return updatedTodos;
     });
     setCurrentTodo("");
-  };
-
-  const handleTodoChange = (index: number, isSelected: boolean) => {
-    setTodos((currentTodos) => {
-      const updatedTodos = currentTodos.map((todo, i) =>
-        i === index ? { ...todo, selected: isSelected } : todo
-      );
-      setValue("content", JSON.stringify(updatedTodos));
-      return updatedTodos;
-    });
-  };
-
-  const handleRemoveTodo = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) => {
-    event?.preventDefault();
-    event?.stopPropagation();
-
-    setTodos((currentTodos) => {
-      const updatedTodos = currentTodos.filter((_, i) => i !== index);
-      setValue("content", JSON.stringify(updatedTodos));
-      return updatedTodos;
-    });
   };
 
   return (
@@ -83,24 +58,43 @@ const CheckboxForm = ({
         </Button>
       </div>
       <CheckboxGroup
-        value={selectedValues}
+        value={state.filter((t) => t.selected).map((t) => t.content)}
         lineThrough
         color="success"
         defaultValue={[]}
       >
-        {todos.map((t, index) => (
+        {state.map((t, index) => (
           <div className="flex items-center gap-2" key={index}>
             <Checkbox
-              onValueChange={(isSelected) =>
-                handleTodoChange(index, isSelected)
-              }
+              onValueChange={(isSelected) => {
+                dispatch({ type: "CHANGE", index });
+                setTodos((currentTodos) => {
+                  const updatedTodos = currentTodos.map((todo, i) =>
+                    i === index ? { ...todo, selected: isSelected } : todo
+                  );
+                  setValue("content", JSON.stringify(updatedTodos));
+                  return updatedTodos;
+                });
+              }}
               value={t.content}
             >
               {t.content}
             </Checkbox>
             <button
               type="button"
-              onClick={(event) => handleRemoveTodo(event, index)}
+              onClick={(event) => {
+                event?.preventDefault();
+                event?.stopPropagation();
+
+                dispatch({ type: "REMOVE", index });
+                setTodos((currentTodos) => {
+                  const updatedTodos = currentTodos.filter(
+                    (_, i) => i !== index
+                  );
+                  setValue("content", JSON.stringify(updatedTodos));
+                  return updatedTodos;
+                });
+              }}
               className="bg-red-500 rounded-md"
             >
               <RemoveLogo width={22} height={22} />

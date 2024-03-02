@@ -87,7 +87,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               noteType={state.activeNote.NoteType}
               isOpen={state.editActive}
               onClose={() => dispatch({ type: "CLOSE" })}
-              isUpdating={true}
+              isUpdating={state.editActive}
               note={state.activeNote}
             />
           )}
