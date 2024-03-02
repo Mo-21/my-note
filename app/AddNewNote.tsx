@@ -25,24 +25,19 @@ const AddNewNote = () => {
             Checkbox
           </Button>
         </ButtonGroup>
-        {state.quickNote ? (
+        {(state.quickNote || state.editor || state.checkbox) && (
           <NewNoteForm
-            isEditorNote={state.editor}
+            noteType={
+              state.quickNote
+                ? "QUICK_NOTE"
+                : state.editor
+                ? "EDITOR"
+                : "CHECKBOX"
+            }
             isOpen={true}
             onClose={() => dispatch({ type: "CLOSE" })}
             isUpdating={false}
           />
-        ) : state.editor ? (
-          <NewNoteForm
-            isEditorNote={state.editor}
-            isOpen={true}
-            onClose={() => dispatch({ type: "CLOSE" })}
-            isUpdating={false}
-          />
-        ) : state.checkbox ? (
-          ""
-        ) : (
-          ""
         )}
       </div>
     </div>
