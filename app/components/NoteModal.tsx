@@ -10,6 +10,7 @@ import {
 import { Note } from "@prisma/client";
 import { useTheme } from "next-themes";
 import ReactMarkdown from "react-markdown";
+import CheckboxModal from "@/app/components/CheckboxModal";
 
 interface NoteModalProps {
   isOpen: boolean;
@@ -34,7 +35,11 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
           className="min-w-full overflow-auto prose"
           style={{ maxHeight: "500px" }}
         >
-          <MarkdownViewer>{note.content}</MarkdownViewer>
+          {note.NoteType === "CHECKBOX" ? (
+            <CheckboxModal todos={JSON.parse(note.content)} />
+          ) : (
+            <MarkdownViewer>{note.content}</MarkdownViewer>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button color="danger" variant="light" onPress={onClose}>
