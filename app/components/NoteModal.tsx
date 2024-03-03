@@ -36,7 +36,7 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
           style={{ maxHeight: "500px" }}
         >
           {note.NoteType === "CHECKBOX" ? (
-            <CheckboxModal isDisabled={true} todos={JSON.parse(note.content)} />
+            <CheckboxModal isDisabled={true} note={note} />
           ) : (
             <MarkdownViewer>{note.content}</MarkdownViewer>
           )}

@@ -1,4 +1,6 @@
 import { Checkbox, CheckboxGroup } from "@nextui-org/react";
+import { Note } from "@prisma/client";
+import { useMemo } from "react";
 
 interface Todo {
   selected: boolean;
@@ -6,12 +8,16 @@ interface Todo {
 }
 
 const CheckboxModal = ({
-  todos,
+  note,
   isDisabled,
 }: {
-  todos: Todo[];
+  note: Note;
   isDisabled: boolean;
 }) => {
+  const todos: Todo[] = useMemo(() => {
+    return JSON.parse(note.content);
+  }, [note.content]);
+
   const selectedValues = todos.filter((t) => t.selected).map((t) => t.content);
 
   return (

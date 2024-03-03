@@ -8,7 +8,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { Note } from "@prisma/client";
-import { useReducer, useState } from "react";
+import { useReducer, useState, useMemo } from "react";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { openModalReducer } from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
@@ -45,10 +45,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           >
             <p>
               {note.NoteType === "CHECKBOX" ? (
-                <CheckboxModal
-                  isDisabled={false}
-                  todos={JSON.parse(note.content)}
-                />
+                <CheckboxModal isDisabled={false} note={note} />
               ) : note.title && note.content.length > 100 ? (
                 note.content.slice(0, 121) + "..."
               ) : !note.title && note.content.length > 100 ? (
