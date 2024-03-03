@@ -79,14 +79,15 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               </Button>
             </div>
           </CardFooter>
-          {state.activeNote && (
+          {state.activeNote && state.previewActive && (
             <NoteModal
+              key={state.activeNote.id}
               isOpen={state.previewActive}
               onClose={() => dispatch({ type: "CLOSE" })}
               note={state.activeNote}
             />
           )}
-          {state.activeNote && (
+          {state.activeNote && state.editActive && (
             <NewNoteForm
               key={`${state.activeNote.id}-${editCounter}`}
               noteType={state.activeNote.NoteType}
