@@ -9,29 +9,31 @@ interface Todo {
 
 const CheckboxModal = ({
   note,
-  isDisabled,
+  isPreviewing,
 }: {
   note: Note;
-  isDisabled: boolean;
+  isPreviewing: boolean;
 }) => {
-  const todos: Todo[] = useMemo(() => {
-    return JSON.parse(note.content);
+  const { todos, isLong, shortTodos } = useMemo(() => {
+    const parsedTodo: Todo[] = JSON.parse(note.content);
+    const isLong = parsedTodo.length > 4;
+    return {
+      todos: parsedTodo,
+      isLong,
+      shortTodos: isLong ? parsedTodo.slice(0, 4) : parsedTodo,
+    };
   }, [note.content]);
 
   const selectedValues = todos.filter((t) => t.selected).map((t) => t.content);
 
   return (
-    <CheckboxGroup
-      value={selectedValues}
-      lineThrough
-      color="success"
-      isDisabled={isDisabled}
-    >
-      {todos.map((t, i) => (
+    <CheckboxGroup value={selectedValues} lineThrough color="success">
+      {(!isPreviewing ? shortTodos : todos).map((t, i) => (
         <Checkbox value={t.content} key={i}>
           {t.content}
         </Checkbox>
       ))}
+      {!isPreviewing && isLong && <div>...</div>}
     </CheckboxGroup>
   );
 };
