@@ -7,7 +7,7 @@ import {
 } from "@nextui-org/react";
 
 const NotesSkeleton = () => {
-  const mockNotes = [1, 2, 3, 4, 5];
+  const mockNotes = [1, 2, 3, 4, 5, 6];
   return (
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
       {mockNotes.map((note) => (
