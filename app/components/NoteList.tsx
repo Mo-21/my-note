@@ -8,9 +8,12 @@ import {
   Button,
 } from "@nextui-org/react";
 import { Note } from "@prisma/client";
-import { useReducer, useState } from "react";
+import { Dispatch, useReducer } from "react";
 import useDeleteNote from "../hooks/useDeleteNote";
-import { openModalReducer } from "../reducers/openModalReducer";
+import {
+  ModalReducerType,
+  openModalReducer,
+} from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
 import NoteModal from "./NoteModal";
 import editIcon from "@/app/assets/edit-icon.svg";
@@ -23,14 +26,13 @@ import classNames from "classnames";
 import DeleteIcon from "../assets/DeleteIcon";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
-  const { mutate } = useDeleteNote();
   const [state, dispatch] = useReducer(openModalReducer, {
     activeNote: null,
     editActive: false,
     previewActive: false,
+    editCounter: 0,
   });
 
-  const [editCounter, setEditCounter] = useState(0);
   const { theme } = useTheme();
 
   const cardStyle = classNames({
@@ -52,41 +54,13 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           onClick={() => dispatch({ type: "PREVIEW", payload: note })}
         >
           <Card className={cardStyle}>
-            {note.title && (
-              <>
-                <CardHeader className="flex gap-3">{note.title}</CardHeader>
-                <Divider />
-              </>
-            )}
+            {note.title && <NoteTitle title={note.title} />}
             <CardBody className="flex-grow">
-              <p>
-                {note.NoteType === "CHECKBOX" ? (
-                  <CheckboxModal isPreviewing={false} note={note} />
-                ) : (
-                  formatNote(note)
-                )}
-              </p>
+              <NoteBody note={note} />
             </CardBody>
             <Divider />
             <CardFooter className="flex justify-between items-center mt-auto h-10">
-              <div className="text-sm">
-                {new Date(note.updatedAt).toISOString().split("T")[0]}
-              </div>
-              <div className="flex items-center gap-1">
-                <Button
-                  onClick={() => {
-                    dispatch({ type: "EDIT", payload: note });
-                    setEditCounter(editCounter + 1);
-                  }}
-                  isIconOnly
-                  size="sm"
-                >
-                  <Image className="w-4" src={editIcon} alt="editIcon" />
-                </Button>
-                <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
-                  <DeleteIcon width={20} height={20} />
-                </Button>
-              </div>
+              <NoteFooter note={note} dispatch={dispatch} />
             </CardFooter>
           </Card>
         </Atropos>
@@ -101,7 +75,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
       )}
       {state.activeNote && state.editActive && (
         <NewNoteForm
-          key={`${state.activeNote.id}-${editCounter}`}
+          key={`${state.activeNote.id}-${state.editCounter}`}
           noteType={state.activeNote.NoteType}
           isOpen={state.editActive}
           onClose={() => dispatch({ type: "CLOSE" })}
@@ -111,6 +85,59 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
       )}
       <Toaster />
     </div>
+  );
+};
+
+const NoteTitle = ({ title }: { title: string }) => {
+  return (
+    <>
+      <CardHeader className="flex gap-3">{title}</CardHeader>
+      <Divider />
+    </>
+  );
+};
+
+const NoteBody = ({ note }: { note: Note }) => {
+  return (
+    <>
+      {note.NoteType === "CHECKBOX" ? (
+        <CheckboxModal isPreviewing={false} note={note} />
+      ) : (
+        <p>{formatNote(note)}</p>
+      )}
+    </>
+  );
+};
+
+const NoteFooter = ({
+  note,
+  dispatch,
+}: {
+  note: Note;
+  dispatch: Dispatch<ModalReducerType>;
+}) => {
+  const { mutate } = useDeleteNote();
+
+  return (
+    <>
+      <div className="text-sm">
+        {new Date(note.updatedAt).toISOString().split("T")[0]}
+      </div>
+      <div className="flex items-center gap-1">
+        <Button
+          onClick={() => {
+            dispatch({ type: "EDIT", payload: note });
+          }}
+          isIconOnly
+          size="sm"
+        >
+          <Image className="w-4" src={editIcon} alt="editIcon" />
+        </Button>
+        <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
+          <DeleteIcon width={20} height={20} />
+        </Button>
+      </div>
+    </>
   );
 };
 

@@ -33,7 +33,7 @@ const CheckboxModal = ({
           {t.content}
         </Checkbox>
       ))}
-      {!isPreviewing && isLong && <div>...</div>}
+      {!isPreviewing && isLong && "..."}
     </CheckboxGroup>
   );
 };

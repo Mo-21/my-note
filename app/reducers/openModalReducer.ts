@@ -18,6 +18,7 @@ interface ModalReducerState {
   activeNote: Note | null;
   editActive: boolean;
   previewActive: boolean;
+  editCounter: number;
 }
 
 export type ModalReducerType =
@@ -36,6 +37,7 @@ export const openModalReducer = (
         activeNote: action.payload,
         editActive: true,
         previewActive: false,
+        editCounter: (state.editCounter += 1),
       };
     case "PREVIEW":
       return {
