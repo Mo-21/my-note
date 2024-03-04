@@ -7,13 +7,12 @@ import {
   CardFooter,
   Button,
 } from "@nextui-org/react";
-import { Note, NoteType } from "@prisma/client";
-import { useReducer, useState, useMemo } from "react";
+import { Note } from "@prisma/client";
+import { useReducer, useState } from "react";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { openModalReducer } from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
 import NoteModal from "./NoteModal";
-import deleteIcon from "@/app/assets/delete-icon.svg";
 import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
 import { Toaster } from "react-hot-toast";
@@ -21,6 +20,7 @@ import CheckboxModal from "./CheckboxModal";
 import Atropos from "atropos/react";
 import { useTheme } from "next-themes";
 import classNames from "classnames";
+import DeleteIcon from "../assets/DeleteIcon";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const { mutate } = useDeleteNote();
@@ -68,7 +68,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
               </p>
             </CardBody>
             <Divider />
-            <CardFooter className="flex justify-between items-center mt-auto">
+            <CardFooter className="flex justify-between items-center mt-auto h-10">
               <div className="text-sm">
                 {new Date(note.updatedAt).toISOString().split("T")[0]}
               </div>
@@ -84,7 +84,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
                   <Image className="w-4" src={editIcon} alt="editIcon" />
                 </Button>
                 <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
-                  <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
+                  <DeleteIcon width={20} height={20} />
                 </Button>
               </div>
             </CardFooter>
@@ -116,7 +116,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
 
 const formatNote = (note: Note) => {
   return note.title && note.content.length > 100
-    ? note.content.slice(0, 121) + "..."
+    ? note.content.slice(0, 101) + "..."
     : !note.title && note.content.length > 100
     ? note.content.slice(0, 221) + "..."
     : note.content;
