@@ -18,6 +18,9 @@ import editIcon from "@/app/assets/edit-icon.svg";
 import Image from "next/image";
 import { Toaster } from "react-hot-toast";
 import CheckboxModal from "./CheckboxModal";
+import Atropos from "atropos/react";
+import { useTheme } from "next-themes";
+import classNames from "classnames";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const { mutate } = useDeleteNote();
@@ -28,51 +31,67 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
   });
 
   const [editCounter, setEditCounter] = useState(0);
+  const { theme } = useTheme();
+
+  const cardStyle = classNames({
+    "flex flex-col w-[300px] min-h-[250px] transition-colors duration-150 ease-in-out":
+      true,
+    "hover:bg-[#f5f5f5]": theme === "light",
+    "hover:bg-[#2c3e50]": theme === "dark",
+  });
 
   return (
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
       {notes.map((note, index) => (
-        <Card className="flex flex-col w-[300px] min-h-[250px]" key={index}>
-          {note.title && (
-            <>
-              <CardHeader className="flex gap-3">{note.title}</CardHeader>
-              <Divider />
-            </>
-          )}
-          <CardBody
-            onClick={() => dispatch({ type: "PREVIEW", payload: note })}
-            className="flex-grow"
-          >
-            <p>
-              {note.NoteType === "CHECKBOX" ? (
-                <CheckboxModal isPreviewing={false} note={note} />
-              ) : (
-                formatNote(note)
-              )}
-            </p>
-          </CardBody>
-          <Divider />
-          <CardFooter className="flex justify-between items-center mt-auto">
-            <div className="text-sm">
-              {new Date(note.updatedAt).toISOString().split("T")[0]}
-            </div>
-            <div className="flex items-center gap-1">
-              <Button
-                onClick={() => {
-                  dispatch({ type: "EDIT", payload: note });
-                  setEditCounter(editCounter + 1);
-                }}
-                isIconOnly
-                size="sm"
-              >
-                <Image className="w-4" src={editIcon} alt="editIcon" />
-              </Button>
-              <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
-                <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
-              </Button>
-            </div>
-          </CardFooter>
-        </Card>
+        <Atropos
+          activeOffset={30}
+          shadow={false}
+          highlight={false}
+          className="my-atropos-custom"
+          key={index}
+        >
+          <Card className={cardStyle}>
+            {note.title && (
+              <>
+                <CardHeader className="flex gap-3">{note.title}</CardHeader>
+                <Divider />
+              </>
+            )}
+            <CardBody
+              onClick={() => dispatch({ type: "PREVIEW", payload: note })}
+              className="flex-grow"
+            >
+              <p>
+                {note.NoteType === "CHECKBOX" ? (
+                  <CheckboxModal isPreviewing={false} note={note} />
+                ) : (
+                  formatNote(note)
+                )}
+              </p>
+            </CardBody>
+            <Divider />
+            <CardFooter className="flex justify-between items-center mt-auto">
+              <div className="text-sm">
+                {new Date(note.updatedAt).toISOString().split("T")[0]}
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  onClick={() => {
+                    dispatch({ type: "EDIT", payload: note });
+                    setEditCounter(editCounter + 1);
+                  }}
+                  isIconOnly
+                  size="sm"
+                >
+                  <Image className="w-4" src={editIcon} alt="editIcon" />
+                </Button>
+                <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
+                  <Image className="w-4" src={deleteIcon} alt="deleteIcon" />
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+        </Atropos>
       ))}
       {state.activeNote && state.previewActive && (
         <NoteModal

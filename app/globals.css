@@ -5,3 +5,7 @@
 .editor-toolbar button:hover {
   background: local;
 }
+
+.my-atropos-custom .atropos-inner {
+  overflow: visible !important;
+}
