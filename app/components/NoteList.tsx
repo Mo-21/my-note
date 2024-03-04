@@ -7,7 +7,7 @@ import {
   CardFooter,
   Button,
 } from "@nextui-org/react";
-import { Note } from "@prisma/client";
+import { Note, NoteType } from "@prisma/client";
 import { useReducer, useState, useMemo } from "react";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { openModalReducer } from "../reducers/openModalReducer";
@@ -54,7 +54,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
           <Divider />
           <CardFooter className="flex justify-between items-center mt-auto">
             <div className="text-sm">
-              {note.updatedAt.toString().split("T")[0]}
+              {new Date(note.updatedAt).toISOString().split("T")[0]}
             </div>
             <div className="flex items-center gap-1">
               <Button
