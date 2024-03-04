@@ -16,11 +16,11 @@ const CheckboxModal = ({
 }) => {
   const { todos, isLong, shortTodos } = useMemo(() => {
     const parsedTodo: Todo[] = JSON.parse(note.content);
-    const isLong = parsedTodo.length > 4;
+    const isLong = parsedTodo.length > 3;
     return {
       todos: parsedTodo,
       isLong,
-      shortTodos: isLong ? parsedTodo.slice(0, 4) : parsedTodo,
+      shortTodos: isLong ? parsedTodo.slice(0, 3) : parsedTodo,
     };
   }, [note.content]);
 
