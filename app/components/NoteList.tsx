@@ -44,11 +44,12 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
     <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
       {notes.map((note, index) => (
         <Atropos
-          activeOffset={30}
+          activeOffset={10}
           shadow={false}
           highlight={false}
           className="my-atropos-custom"
           key={index}
+          onClick={() => dispatch({ type: "PREVIEW", payload: note })}
         >
           <Card className={cardStyle}>
             {note.title && (
@@ -57,10 +58,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
                 <Divider />
               </>
             )}
-            <CardBody
-              onClick={() => dispatch({ type: "PREVIEW", payload: note })}
-              className="flex-grow"
-            >
+            <CardBody className="flex-grow">
               <p>
                 {note.NoteType === "CHECKBOX" ? (
                   <CheckboxModal isPreviewing={false} note={note} />
