@@ -25,16 +25,14 @@ const Notes = () => {
 
   return (
     <div className="flex flex-col items-center">
-      {notes && notes.length > 0 ? (
-        <>
-          <NotesList notes={notes} />
-          <div className="mt-3" ref={ref}>
-            {isFetchingNextPage && "Loading..."}
-          </div>
-        </>
+      {notes.length > 0 ? (
+        <NotesList notes={notes} />
       ) : (
         <div className="mt-3">There are no notes</div>
       )}
+      <div className="mt-3" ref={ref}>
+        {isFetchingNextPage && "Loading..."}
+      </div>
     </div>
   );
 };
