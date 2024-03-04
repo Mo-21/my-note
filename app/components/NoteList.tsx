@@ -46,12 +46,8 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             <p>
               {note.NoteType === "CHECKBOX" ? (
                 <CheckboxModal isPreviewing={false} note={note} />
-              ) : note.title && note.content.length > 100 ? (
-                note.content.slice(0, 121) + "..."
-              ) : !note.title && note.content.length > 100 ? (
-                note.content.slice(0, 221) + "..."
               ) : (
-                note.content
+                formatNote(note)
               )}
             </p>
           </CardBody>
@@ -99,6 +95,14 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
       <Toaster />
     </div>
   );
+};
+
+const formatNote = (note: Note) => {
+  return note.title && note.content.length > 100
+    ? note.content.slice(0, 121) + "..."
+    : !note.title && note.content.length > 100
+    ? note.content.slice(0, 221) + "..."
+    : note.content;
 };
 
 export default NotesList;
