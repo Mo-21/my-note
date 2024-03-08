@@ -5,17 +5,20 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import AuthProvider from "../auth/Provider";
 import ReactQueryProvider from "./ReactQueryProvider";
 import { NotesProvider } from "./NotesProvider";
+import { ActiveNoteProvider } from "./ActiveNoteProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <ReactQueryProvider>
         <NotesProvider>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              {children}
-            </NextThemesProvider>
-          </NextUIProvider>
+          <ActiveNoteProvider>
+            <NextUIProvider>
+              <NextThemesProvider attribute="class" defaultTheme="dark">
+                {children}
+              </NextThemesProvider>
+            </NextUIProvider>
+          </ActiveNoteProvider>
         </NotesProvider>
       </ReactQueryProvider>
     </AuthProvider>

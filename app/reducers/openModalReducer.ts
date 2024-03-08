@@ -14,7 +14,7 @@ interface ClosingModal {
   type: "CLOSE";
 }
 
-interface ModalReducerState {
+export interface ModalReducerState {
   activeNote: Note | null;
   editActive: boolean;
   previewActive: boolean;
