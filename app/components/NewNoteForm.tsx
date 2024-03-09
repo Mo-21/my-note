@@ -16,7 +16,7 @@ import {
 import { useForm, SubmitHandler } from "react-hook-form";
 import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
 import { Note } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NoteEditorForm from "./NoteEditorForm";
 import NoteTextarea from "./NoteTextarea";
 import CheckboxForm, { Todo } from "./CheckboxForm";
@@ -47,6 +47,11 @@ const NewNoteForm = ({
       ? JSON.parse(note.content)
       : []
   );
+
+  useEffect(() => {
+    if (isUpdating && note && noteType === "CHECKBOX")
+      setValue("content", JSON.stringify(todos));
+  }, [isUpdating, note, setValue, todos, noteType]);
 
   const onSubmit: SubmitHandler<EditorNoteType> = (data, e) => {
     e?.preventDefault();
