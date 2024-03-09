@@ -3,19 +3,21 @@ import { Todo } from "../components/CheckboxForm";
 interface AddTodo {
   type: "ADD";
   content: string;
+  id: string;
 }
 
 interface RemoveTodo {
   type: "REMOVE";
-  index: number;
+  id: string;
 }
 
 interface ChangeTodo {
   type: "CHANGE";
-  index: number;
+  id: string;
+  selected: boolean;
 }
 
-type CheckboxAction = AddTodo | RemoveTodo | ChangeTodo;
+export type CheckboxAction = AddTodo | RemoveTodo | ChangeTodo;
 
 export const checkboxReducer = (
   state: Todo[],
@@ -23,13 +25,16 @@ export const checkboxReducer = (
 ): Todo[] => {
   switch (action.type) {
     case "ADD":
-      return [...state, { selected: false, content: action.content }];
+      return [
+        ...state,
+        { id: action.id, selected: false, content: action.content },
+      ];
     case "CHANGE":
-      return state.map((todo, index) =>
-        index === action.index ? { ...todo, selected: !todo.selected } : todo
+      return state.map((todo) =>
+        todo.id === action.id ? { ...todo, selected: action.selected } : todo
       );
     case "REMOVE":
-      return state.filter((_, index) => index !== action.index);
+      return state.filter((todo) => todo.id !== action.id);
     default:
       return state;
   }
