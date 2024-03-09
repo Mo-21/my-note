@@ -6,6 +6,10 @@ import {
   Dispatch,
   SetStateAction,
   ReactElement,
+  useEffect,
+  memo,
+  useCallback,
+  useMemo,
 } from "react";
 import { UseFormSetValue } from "react-hook-form";
 import { Button, Input, CheckboxGroup, Checkbox } from "@nextui-org/react";
@@ -28,6 +32,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { v4 as uuidv4 } from "uuid";
 import GripIcon from "../assets/GripIcon";
+import { Note } from "@prisma/client";
 
 export interface Todo {
   id: string;
@@ -36,6 +41,32 @@ export interface Todo {
 }
 
 const CheckboxForm = ({
+  setValue,
+  isUpdating,
+  note,
+}: {
+  setValue: UseFormSetValue<EditorNoteType>;
+  isUpdating: boolean;
+  note?: Note | null;
+}) => {
+  const [todos, setTodos] = useState<Todo[]>(
+    isUpdating && note ? JSON.parse(note.content) : []
+  );
+
+  useEffect(() => {
+    if (isUpdating && note) setValue("content", JSON.stringify(todos));
+  }, [isUpdating, note, setValue, todos]);
+
+  return (
+    <CheckboxGroupForm
+      initialTodos={todos}
+      setTodos={setTodos}
+      setValue={setValue}
+    />
+  );
+};
+
+const CheckboxGroupForm = ({
   setValue,
   initialTodos,
   setTodos,
@@ -48,7 +79,9 @@ const CheckboxForm = ({
   const [state, dispatch] = useReducer(checkboxReducer, initialTodos);
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   const handleAddTodo = () => {
@@ -75,6 +108,10 @@ const CheckboxForm = ({
           (todo) => todo.id === active.id
         );
         const newIndex = currentTodos.findIndex((todo) => todo.id === over.id);
+        setValue(
+          "content",
+          JSON.stringify(arrayMove(currentTodos, oldIndex, newIndex))
+        );
         return arrayMove(currentTodos, oldIndex, newIndex);
       });
     }
@@ -112,13 +149,12 @@ const CheckboxForm = ({
             color="success"
             defaultValue={[]}
           >
-            {initialTodos.map((todo, index) => (
+            {initialTodos.map((todo) => (
               <SortableTodoItem
-                key={index}
+                key={todo.id}
                 id={todo.id}
                 content={todo.content}
                 selected={todo.selected}
-                index={index}
                 dispatch={dispatch}
                 setTodos={setTodos}
                 setValue={setValue}
@@ -135,65 +171,75 @@ interface SortableTodoItemProps {
   id: string;
   content: string;
   selected: boolean;
-  index: number;
   dispatch: Dispatch<CheckboxAction>;
   setTodos: Dispatch<SetStateAction<Todo[]>>;
   setValue: UseFormSetValue<EditorNoteType>;
 }
 
-export const SortableTodoItem = ({
-  id,
-  content,
-  selected,
-  index,
-  dispatch,
-  setTodos,
-  setValue,
-}: SortableTodoItemProps): ReactElement => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+export const SortableTodoItem = memo(
+  ({
+    id,
+    content,
+    selected,
+    dispatch,
+    setTodos,
+    setValue,
+  }: SortableTodoItemProps): ReactElement => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+    const style = useMemo(
+      () => ({
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }),
+      [transform, transition]
+    );
 
-  return (
-    <div ref={setNodeRef} style={style} className="flex items-center gap-2">
-      <div {...listeners} {...attributes} className="drag-handle">
-        <GripIcon height={22} width={22} />
-      </div>
-      <Checkbox
-        checked={selected}
-        onValueChange={(isSelected) => {
-          dispatch({ type: "CHANGE", id, selected: isSelected });
-          setTodos((currentTodos) => {
-            const updatedTodos = currentTodos.map((todo, i) =>
-              i === index ? { ...todo, selected: isSelected } : todo
-            );
-            setValue("content", JSON.stringify(updatedTodos));
-            return updatedTodos;
-          });
-        }}
-        value={content}
-      >
-        {content}
-      </Checkbox>
-      <button
-        type="button"
-        onClick={(event) => {
-          event.stopPropagation();
-          dispatch({ type: "REMOVE", id });
-          setTodos((currentTodos) =>
-            currentTodos.filter((_, i) => i !== index)
+    const onSelectChange = useCallback(
+      (isSelected: boolean) => {
+        dispatch({ type: "CHANGE", id, selected: isSelected });
+        setTodos((currentTodos) => {
+          const updatedTodos = currentTodos.map((todo) =>
+            todo.id === id ? { ...todo, selected: isSelected } : todo
           );
-        }}
-        className="bg-red-500 rounded-md"
-      >
-        <RemoveLogo width={22} height={22} />
-      </button>
-    </div>
-  );
-};
+          setValue("content", JSON.stringify(updatedTodos));
+          return updatedTodos;
+        });
+      },
+      [id, dispatch, setTodos, setValue]
+    );
+
+    return (
+      <div ref={setNodeRef} style={style} className="flex items-center gap-2">
+        <div {...listeners} {...attributes} className="drag-handle">
+          <GripIcon height={22} width={22} />
+        </div>
+        <Checkbox
+          checked={selected}
+          onValueChange={(isSelected) => onSelectChange(isSelected)}
+          value={content}
+        >
+          {content}
+        </Checkbox>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            dispatch({ type: "REMOVE", id });
+            setTodos((currentTodos) =>
+              currentTodos.filter((todo) => todo.id !== id)
+            );
+          }}
+          className="bg-red-500 rounded-md"
+        >
+          <RemoveLogo width={22} height={22} />
+        </button>
+      </div>
+    );
+  }
+);
+
+SortableTodoItem.displayName = "SortableTodoItem";
 
 export default CheckboxForm;

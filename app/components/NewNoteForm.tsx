@@ -42,16 +42,6 @@ const NewNoteForm = ({
     });
 
   const { mutate } = useCreateAndUpdateNote(isUpdating);
-  const [todos, setTodos] = useState<Todo[]>(
-    noteType === "CHECKBOX" && isUpdating && note
-      ? JSON.parse(note.content)
-      : []
-  );
-
-  useEffect(() => {
-    if (isUpdating && note && noteType === "CHECKBOX")
-      setValue("content", JSON.stringify(todos));
-  }, [isUpdating, note, setValue, todos, noteType]);
 
   const onSubmit: SubmitHandler<EditorNoteType> = (data, e) => {
     e?.preventDefault();
@@ -102,8 +92,8 @@ const NewNoteForm = ({
               <NoteTextarea register={register} note={note} />
             ) : (
               <CheckboxForm
-                setTodos={setTodos}
-                initialTodos={todos}
+                note={note}
+                isUpdating={isUpdating}
                 setValue={setValue}
               />
             )}
