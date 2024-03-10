@@ -12,6 +12,7 @@ export async function PATCH(req: NextRequest) {
     id: number;
     content: string;
     title?: string | null | undefined;
+    isPinned: boolean;
   } = await req.json();
 
   if (!body)
@@ -24,6 +25,7 @@ export async function PATCH(req: NextRequest) {
     data: {
       title: body.title,
       content: body.content,
+      isPinned: body.isPinned,
     },
   });
 

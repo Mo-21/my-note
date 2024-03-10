@@ -23,6 +23,8 @@ import { useTheme } from "next-themes";
 import classNames from "classnames";
 import DeleteIcon from "../assets/DeleteIcon";
 import EditIcon from "../assets/EditIcon";
+import PinIcon from "../assets/PinIcon";
+import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const [state, dispatch] = useReducer(openModalReducer, {
@@ -116,6 +118,7 @@ const NoteFooter = ({
   dispatch: Dispatch<ModalReducerType>;
 }) => {
   const { mutate } = useDeleteNote();
+  const { mutate: pinNote } = useCreateAndUpdateNote(true);
 
   return (
     <>
@@ -134,6 +137,24 @@ const NoteFooter = ({
         </Button>
         <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
           <DeleteIcon width={20} height={20} />
+        </Button>
+        <Button
+          isIconOnly
+          size="sm"
+          onClick={() =>
+            pinNote({
+              id: note.id,
+              title: note.title ? note.title : "",
+              content: note.content,
+              userId: -1,
+              NoteType: note.NoteType,
+              createdAt: note.createdAt,
+              updatedAt: new Date(),
+              isPinned: !note.isPinned,
+            })
+          }
+        >
+          <PinIcon width={20} height={20} />
         </Button>
       </div>
     </>

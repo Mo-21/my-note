@@ -55,6 +55,7 @@ const NewNoteForm = ({
       NoteType: noteType,
       createdAt: note ? note.createdAt : new Date(),
       updatedAt: new Date(),
+      isPinned: false,
     });
 
     reset();
