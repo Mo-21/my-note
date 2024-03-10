@@ -16,14 +16,13 @@ import {
 } from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
 import NoteModal from "./NoteModal";
-import editIcon from "@/app/assets/edit-icon.svg";
-import Image from "next/image";
 import { Toaster } from "react-hot-toast";
 import CheckboxModal from "./CheckboxModal";
 import Atropos from "atropos/react";
 import { useTheme } from "next-themes";
 import classNames from "classnames";
 import DeleteIcon from "../assets/DeleteIcon";
+import EditIcon from "../assets/EditIcon";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const [state, dispatch] = useReducer(openModalReducer, {
@@ -43,7 +42,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
   });
 
   return (
-    <div className="flex mt-5 gap-3 flex-wrap px-5 justify-center">
+    <div className="flex w-full mt-5 gap-3 flex-wrap px-5 justify-start">
       {notes.map((note, index) => (
         <Atropos
           activeOffset={10}
@@ -131,7 +130,7 @@ const NoteFooter = ({
           isIconOnly
           size="sm"
         >
-          <Image className="w-4" src={editIcon} alt="editIcon" />
+          <EditIcon width={20} height={20} />
         </Button>
         <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
           <DeleteIcon width={20} height={20} />
