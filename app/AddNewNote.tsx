@@ -14,7 +14,7 @@ const AddNewNote = () => {
   });
 
   return (
-    <div>
+    <div className="mb-3">
       <div className="flex justify-evenly items-center px-4 mt-3">
         <ButtonGroup variant="ghost" className="flex">
           <Button onClick={() => dispatch({ type: "QUICK_NOTE" })}>
