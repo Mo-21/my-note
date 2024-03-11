@@ -1,19 +1,11 @@
-"use client";
 import {
   Card,
   CardHeader,
   Divider,
   CardBody,
   CardFooter,
-  Button,
 } from "@nextui-org/react";
 import { Note } from "@prisma/client";
-import { Dispatch, useReducer } from "react";
-import useDeleteNote from "../hooks/useDeleteNote";
-import {
-  ModalReducerType,
-  openModalReducer,
-} from "../reducers/openModalReducer";
 import NewNoteForm from "./NewNoteForm";
 import NoteModal from "./NoteModal";
 import { Toaster } from "react-hot-toast";
@@ -21,21 +13,11 @@ import CheckboxModal from "./CheckboxModal";
 import Atropos from "atropos/react";
 import { useTheme } from "next-themes";
 import classNames from "classnames";
-import DeleteIcon from "../assets/DeleteIcon";
-import EditIcon from "../assets/EditIcon";
-import PinIcon from "../assets/PinIcon";
-import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
-import ArchiveNoteIcon from "../assets/ArchiveNoteIcon";
-import UnArchiveNoteIcon from "../assets/UnArchiveNoteIcon";
+import NoteActionsDropdown from "./NoteActionsDropdown";
+import { useActiveNote } from "../hooks/useActiveNote";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
-  const [state, dispatch] = useReducer(openModalReducer, {
-    activeNote: null,
-    editActive: false,
-    previewActive: false,
-    editCounter: 0,
-  });
-
+  const { state, dispatch } = useActiveNote();
   const { theme } = useTheme();
 
   const cardStyle = classNames({
@@ -63,7 +45,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
             </CardBody>
             <Divider />
             <CardFooter className="flex justify-between items-center mt-auto h-10">
-              <NoteFooter note={note} dispatch={dispatch} />
+              <NoteFooter note={note} />
             </CardFooter>
           </Card>
         </Atropos>
@@ -112,74 +94,14 @@ const NoteBody = ({ note }: { note: Note }) => {
   );
 };
 
-const NoteFooter = ({
-  note,
-  dispatch,
-}: {
-  note: Note;
-  dispatch: Dispatch<ModalReducerType>;
-}) => {
-  const { mutate } = useDeleteNote();
-  const { mutate: updateNote } = useCreateAndUpdateNote(true);
-
-  const handleButtonClick = (key: "PIN" | "ARCHIVE") => {
-    updateNote({
-      id: note.id,
-      title: note.title ? note.title : "",
-      content: note.content,
-      userId: -1,
-      NoteType: note.NoteType,
-      createdAt: note.createdAt,
-      updatedAt: new Date(),
-      isPinned: key === "PIN" ? !note.isPinned : note.isPinned,
-      isArchived: key === "ARCHIVE" ? !note.isArchived : note.isArchived,
-    });
-  };
-
+const NoteFooter = ({ note }: { note: Note }) => {
   return (
     <>
       <div className="text-sm">
         {new Date(note.updatedAt).toISOString().split("T")[0]}
       </div>
       <div className="flex items-center gap-1">
-        <Button
-          isIconOnly
-          variant="light"
-          onClick={() => {
-            dispatch({ type: "EDIT", payload: note });
-          }}
-          size="sm"
-        >
-          <EditIcon width={20} height={20} />
-        </Button>
-        <Button
-          isIconOnly
-          variant="light"
-          size="sm"
-          onClick={() => handleButtonClick("PIN")}
-        >
-          <PinIcon width={20} height={20} />
-        </Button>
-        <Button
-          isIconOnly
-          variant="light"
-          size="sm"
-          onClick={() => handleButtonClick("ARCHIVE")}
-        >
-          {!note.isArchived ? (
-            <ArchiveNoteIcon width={20} height={20} />
-          ) : (
-            <UnArchiveNoteIcon width={20} height={20} />
-          )}
-        </Button>
-        <Button
-          isIconOnly
-          variant="light"
-          size="sm"
-          onClick={() => mutate(note.id)}
-        >
-          <DeleteIcon width={20} height={20} />
-        </Button>
+        <NoteActionsDropdown note={note} />
       </div>
     </>
   );

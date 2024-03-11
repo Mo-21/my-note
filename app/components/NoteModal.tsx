@@ -11,6 +11,7 @@ import { Note } from "@prisma/client";
 import { useTheme } from "next-themes";
 import ReactMarkdown from "react-markdown";
 import CheckboxModal from "@/app/components/CheckboxModal";
+import NoteActionsDropdown from "./NoteActionsDropdown";
 
 interface NoteModalProps {
   isOpen: boolean;
@@ -41,8 +42,9 @@ const NoteModal = ({ isOpen, onClose, note }: NoteModalProps) => {
             <MarkdownViewer>{note.content}</MarkdownViewer>
           )}
         </ModalBody>
-        <ModalFooter>
-          <Button color="danger" variant="light" onPress={onClose}>
+        <ModalFooter className="flex gap-3">
+          <NoteActionsDropdown note={note} />
+          <Button color="danger" variant="flat" onPress={onClose}>
             Close
           </Button>
         </ModalFooter>
