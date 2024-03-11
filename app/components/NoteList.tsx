@@ -44,7 +44,7 @@ const NotesList = ({ notes }: { notes: Note[] }) => {
   });
 
   return (
-    <div className="flex w-full mt-5 gap-3 flex-wrap px-5 justify-start">
+    <div className="flex w-full gap-2 flex-wrap px-5 justify-start">
       {notes.map((note, index) => (
         <Atropos
           activeOffset={10}
