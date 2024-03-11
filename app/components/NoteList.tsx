@@ -25,6 +25,8 @@ import DeleteIcon from "../assets/DeleteIcon";
 import EditIcon from "../assets/EditIcon";
 import PinIcon from "../assets/PinIcon";
 import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
+import ArchiveNoteIcon from "../assets/ArchiveNoteIcon";
+import UnArchiveNoteIcon from "../assets/UnArchiveNoteIcon";
 
 const NotesList = ({ notes }: { notes: Note[] }) => {
   const [state, dispatch] = useReducer(openModalReducer, {
@@ -118,7 +120,21 @@ const NoteFooter = ({
   dispatch: Dispatch<ModalReducerType>;
 }) => {
   const { mutate } = useDeleteNote();
-  const { mutate: pinNote } = useCreateAndUpdateNote(true);
+  const { mutate: updateNote } = useCreateAndUpdateNote(true);
+
+  const handleButtonClick = (key: "PIN" | "ARCHIVE") => {
+    updateNote({
+      id: note.id,
+      title: note.title ? note.title : "",
+      content: note.content,
+      userId: -1,
+      NoteType: note.NoteType,
+      createdAt: note.createdAt,
+      updatedAt: new Date(),
+      isPinned: key === "PIN" ? !note.isPinned : note.isPinned,
+      isArchived: key === "ARCHIVE" ? !note.isArchived : note.isArchived,
+    });
+  };
 
   return (
     <>
@@ -138,23 +154,19 @@ const NoteFooter = ({
         <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
           <DeleteIcon width={20} height={20} />
         </Button>
+        <Button isIconOnly size="sm" onClick={() => handleButtonClick("PIN")}>
+          <PinIcon width={20} height={20} />
+        </Button>
         <Button
           isIconOnly
           size="sm"
-          onClick={() =>
-            pinNote({
-              id: note.id,
-              title: note.title ? note.title : "",
-              content: note.content,
-              userId: -1,
-              NoteType: note.NoteType,
-              createdAt: note.createdAt,
-              updatedAt: new Date(),
-              isPinned: !note.isPinned,
-            })
-          }
+          onClick={() => handleButtonClick("ARCHIVE")}
         >
-          <PinIcon width={20} height={20} />
+          {!note.isArchived ? (
+            <ArchiveNoteIcon width={20} height={20} />
+          ) : (
+            <UnArchiveNoteIcon width={20} height={20} />
+          )}
         </Button>
       </div>
     </>

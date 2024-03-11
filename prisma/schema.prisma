@@ -14,15 +14,16 @@ datasource db {
 }
 
 model Note {
-  id        Int      @id @default(autoincrement())
-  title     String?
-  content   String   @db.LongText
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
-  NoteType  NoteType @default(EDITOR)
-  isPinned  Boolean  @default(false)
+  id         Int      @id @default(autoincrement())
+  title      String?
+  content    String   @db.LongText
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
+  NoteType   NoteType @default(EDITOR)
+  isPinned   Boolean  @default(false)
+  isArchived Boolean  @default(false)
 }
 
 model User {

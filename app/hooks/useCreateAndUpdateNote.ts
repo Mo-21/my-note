@@ -12,6 +12,7 @@ interface UpdatedNoteType {
   content: string;
   title?: string | null | undefined;
   isPinned: boolean;
+  isArchived: boolean;
 }
 
 interface ApiResponse {

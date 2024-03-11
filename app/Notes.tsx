@@ -1,35 +1,38 @@
-"use client";
-import ErrorCallout from "./components/ErrorCallout";
-import { useEffect } from "react";
-import NotesSkeleton from "./skeletons/NotesSkeleton";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { useNotesContext } from "./hooks/useNotesContext";
 import NotesList from "./components/NoteList";
 import { Divider } from "@nextui-org/react";
+import { Note } from "@prisma/client";
 
-const Notes = () => {
-  const {
-    filteredNotes: notes,
-    isLoading,
-    error,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useNotesContext();
+interface NotesProps {
+  pinnedNotes?: Note[];
+  unpinnedNotes?: Note[];
+  archivedNotes?: Note[];
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+}
+
+const Notes = ({
+  pinnedNotes = [],
+  unpinnedNotes = [],
+  archivedNotes = [],
+  fetchNextPage,
+  isFetchingNextPage,
+}: NotesProps) => {
   const { ref, inView } = useInView();
 
   useEffect(() => {
     if (inView) fetchNextPage();
   }, [inView, fetchNextPage]);
 
-  if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
-  if (isLoading) return <NotesSkeleton />;
-
-  const pinnedNotes = notes.filter((n) => n.isPinned);
-  const unpinnedNotes = notes.filter((n) => !n.isPinned);
+  const hasNotes =
+    pinnedNotes.length > 0 ||
+    unpinnedNotes.length > 0 ||
+    archivedNotes.length > 0;
 
   return (
     <div className="flex flex-col items-center">
-      {notes.length > 0 ? (
+      {hasNotes ? (
         <>
           {pinnedNotes.length > 0 && (
             <>
@@ -37,7 +40,8 @@ const Notes = () => {
               <Divider className="my-3" />
             </>
           )}
-          <NotesList notes={unpinnedNotes} />
+          {unpinnedNotes.length > 0 && <NotesList notes={unpinnedNotes} />}
+          {archivedNotes.length > 0 && <NotesList notes={archivedNotes} />}
         </>
       ) : (
         <div className="mt-3">There are no notes</div>

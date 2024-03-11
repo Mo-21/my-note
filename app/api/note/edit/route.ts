@@ -13,6 +13,7 @@ export async function PATCH(req: NextRequest) {
     content: string;
     title?: string | null | undefined;
     isPinned: boolean;
+    isArchived: boolean;
   } = await req.json();
 
   if (!body)
@@ -26,6 +27,7 @@ export async function PATCH(req: NextRequest) {
       title: body.title,
       content: body.content,
       isPinned: body.isPinned,
+      isArchived: body.isArchived,
     },
   });
 
