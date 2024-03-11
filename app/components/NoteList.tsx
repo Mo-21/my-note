@@ -143,22 +143,26 @@ const NoteFooter = ({
       </div>
       <div className="flex items-center gap-1">
         <Button
+          isIconOnly
+          variant="light"
           onClick={() => {
             dispatch({ type: "EDIT", payload: note });
           }}
-          isIconOnly
           size="sm"
         >
           <EditIcon width={20} height={20} />
         </Button>
-        <Button isIconOnly size="sm" onClick={() => mutate(note.id)}>
-          <DeleteIcon width={20} height={20} />
-        </Button>
-        <Button isIconOnly size="sm" onClick={() => handleButtonClick("PIN")}>
+        <Button
+          isIconOnly
+          variant="light"
+          size="sm"
+          onClick={() => handleButtonClick("PIN")}
+        >
           <PinIcon width={20} height={20} />
         </Button>
         <Button
           isIconOnly
+          variant="light"
           size="sm"
           onClick={() => handleButtonClick("ARCHIVE")}
         >
@@ -167,6 +171,14 @@ const NoteFooter = ({
           ) : (
             <UnArchiveNoteIcon width={20} height={20} />
           )}
+        </Button>
+        <Button
+          isIconOnly
+          variant="light"
+          size="sm"
+          onClick={() => mutate(note.id)}
+        >
+          <DeleteIcon width={20} height={20} />
         </Button>
       </div>
     </>
