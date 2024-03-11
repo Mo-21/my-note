@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "atropos/css";
 import { Providers } from "./providers/providers";
+import NavigationBar from "./NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
+          <NavigationBar />
           <main className="h-screen">{children}</main>
         </Providers>
       </body>
