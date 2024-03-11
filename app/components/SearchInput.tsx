@@ -1,13 +1,10 @@
 "use client";
-import { useState } from "react";
 import { Input } from "@nextui-org/react";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { SearchIcon } from "../assets/SearchIcon";
 
 const SearchInput = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-
-  const { setQuery } = useNotesContext();
+  const { setQuery, query } = useNotesContext();
 
   return (
     <Input
@@ -16,9 +13,8 @@ const SearchInput = () => {
       size="sm"
       startContent={<SearchIcon />}
       type="search"
-      value={searchQuery}
+      value={query}
       onChange={(e) => {
-        setSearchQuery(e.target.value);
         setQuery(e.target.value);
       }}
     />

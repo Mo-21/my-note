@@ -17,6 +17,7 @@ interface NotesContextType {
   fetchNextPage: any;
   isFetchingNextPage: boolean;
   setQuery: Dispatch<SetStateAction<string>>;
+  query: string;
 }
 
 export const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
@@ -47,6 +48,7 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
     <NotesCtx.Provider
       value={{
         filteredNotes,
+        query,
         setQuery,
         isLoading,
         error,

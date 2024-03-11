@@ -1,12 +1,9 @@
 "use client";
 import { Tab, Tabs } from "@nextui-org/react";
-import React, { useEffect } from "react";
 import AddNewNote from "./AddNewNote";
 import Notes from "./Notes";
 import NotesIcon from "./assets/NotesIcon";
 import ArchiveIcon from "./assets/ArchiveIcon";
-import ArchivedNotes from "./ArchivedNotes";
-import { useInView } from "react-intersection-observer";
 import ErrorCallout from "./components/ErrorCallout";
 import { useNotesContext } from "./hooks/useNotesContext";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
@@ -18,14 +15,21 @@ const TabsNavigation = () => {
     error,
     fetchNextPage,
     isFetchingNextPage,
+    query,
   } = useNotesContext();
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading) return <NotesSkeleton />;
 
-  const pinnedNotes = notes.filter((n) => n.isPinned && !n.isArchived);
-  const unpinnedNotes = notes.filter((n) => !n.isPinned && !n.isArchived);
   const archivedNotes = notes.filter((n) => n.isArchived);
+  const pinnedNotes = notes.filter((n) => n.isPinned && !n.isArchived);
+  const unpinnedNotes = notes.filter((n) => {
+    if (query) {
+      return !n.isPinned;
+    } else if (!query) {
+      return !n.isPinned && !n.isArchived;
+    }
+  });
 
   return (
     <Tabs
