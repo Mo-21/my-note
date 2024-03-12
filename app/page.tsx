@@ -4,9 +4,10 @@ import AddNewNote from "./AddNewNote";
 import NotesIcon from "./assets/NotesIcon";
 import ArchiveIcon from "./assets/ArchiveIcon";
 import ErrorCallout from "./components/ErrorCallout";
-import { useNotesContext } from "./hooks/useNotesContext";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
 import NotesList from "./components/NoteList";
+import { useNotesContext } from "./hooks/useNotesContext";
+import { Note } from "@prisma/client";
 
 const TabsNavigation = () => {
   const {
@@ -16,6 +17,22 @@ const TabsNavigation = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useNotesContext();
+
+  const tabConfigs = [
+    {
+      key: "notes",
+      icon: <NotesIcon width={22} height={22} />,
+      title: "Notes",
+      notes: [notes.pinnedNotes, notes.unpinnedNotes],
+      includeAddNew: true,
+    },
+    {
+      key: "archived-notes",
+      icon: <ArchiveIcon width={22} height={22} />,
+      title: "Archive",
+      notes: [notes.archivedNotes],
+    },
+  ];
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading) return <NotesSkeleton />;
@@ -27,46 +44,57 @@ const TabsNavigation = () => {
       variant="underlined"
       aria-label="Tabs"
     >
-      <Tab
-        key="notes"
-        title={
-          <div className="flex items-center space-x-2">
-            <NotesIcon width={22} height={22} />
-            <span>Notes</span>
-          </div>
-        }
-        className="pt-0"
-      >
-        <AddNewNote />
-        <NotesList
-          notes={notes.pinnedNotes}
-          fetchNextPage={fetchNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
-        <Divider className="my-3" />
-        <NotesList
-          notes={notes.unpinnedNotes}
-          fetchNextPage={fetchNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
-      </Tab>
-      <Tab
-        key="archived-notes"
-        title={
-          <div className="flex items-center space-x-2">
-            <ArchiveIcon width={22} height={22} />
-            <span>Archive</span>
-          </div>
-        }
-      >
-        <NotesList
-          notes={notes.archivedNotes}
-          fetchNextPage={fetchNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
-      </Tab>
+      {tabConfigs.map(({ key, icon, title, notes, includeAddNew }) => (
+        <Tab
+          key={key}
+          title={
+            <div className="flex items-center space-x-2">
+              {icon}
+              <span>{title}</span>
+            </div>
+          }
+          className="pt-0 mt-2"
+        >
+          <TabContent
+            fetchNextPage={fetchNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            notes={notes}
+            includeAddNew={includeAddNew || false}
+          />
+        </Tab>
+      ))}
     </Tabs>
   );
 };
+
+const TabContent = ({
+  isFetchingNextPage,
+  fetchNextPage,
+  notes,
+  includeAddNew,
+}: TabContentProps) => {
+  return (
+    <>
+      {includeAddNew && <AddNewNote />}
+      {notes.map((noteGroup, index) => (
+        <div key={index}>
+          <NotesList
+            notes={noteGroup}
+            fetchNextPage={fetchNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+          {index < notes.length - 1 && <Divider className="my-3" />}
+        </div>
+      ))}
+    </>
+  );
+};
+
+interface TabContentProps {
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+  notes: Note[][];
+  includeAddNew: boolean;
+}
 
 export default TabsNavigation;
