@@ -11,7 +11,11 @@ import {
 import { useGetInfiniteNotes } from "../hooks/useGetNotes";
 
 interface NotesContextType {
-  filteredNotes: Note[];
+  filteredNotes: {
+    pinnedNotes: Note[];
+    unpinnedNotes: Note[];
+    archivedNotes: Note[];
+  };
   isLoading: boolean;
   error: Error | null;
   fetchNextPage: any;
@@ -34,14 +38,27 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
   } = useGetInfiniteNotes();
 
   const filteredNotes = useMemo(() => {
-    if (!notes?.data) return [];
-    if (!query) return notes.data;
-    return notes?.data.filter((note) => {
-      return (
-        note.title?.toLowerCase().includes(query.toLowerCase()) ||
-        note.content.toLowerCase().includes(query.toLowerCase())
-      );
-    });
+    if (!notes?.data)
+      return { pinnedNotes: [], unpinnedNotes: [], archivedNotes: [] };
+
+    const filtered = query
+      ? notes.data.filter((note) => {
+          return (
+            note.title?.toLowerCase().includes(query.toLowerCase()) ||
+            note.content.toLowerCase().includes(query.toLowerCase())
+          );
+        })
+      : notes.data;
+
+    const archivedNotes = filtered.filter((n) => n.isArchived);
+    const pinnedNotes = filtered.filter((n) =>
+      query ? n.isPinned : n.isPinned && !n.isArchived
+    );
+    const unpinnedNotes = filtered.filter((n) =>
+      query ? !n.isPinned : !n.isPinned && !n.isArchived
+    );
+
+    return { pinnedNotes, unpinnedNotes, archivedNotes };
   }, [notes, query]);
 
   return (

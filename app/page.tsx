@@ -1,12 +1,12 @@
 "use client";
-import { Tab, Tabs } from "@nextui-org/react";
+import { Divider, Tab, Tabs } from "@nextui-org/react";
 import AddNewNote from "./AddNewNote";
-import Notes from "./Notes";
 import NotesIcon from "./assets/NotesIcon";
 import ArchiveIcon from "./assets/ArchiveIcon";
 import ErrorCallout from "./components/ErrorCallout";
 import { useNotesContext } from "./hooks/useNotesContext";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
+import NotesList from "./components/NoteList";
 
 const TabsNavigation = () => {
   const {
@@ -15,21 +15,10 @@ const TabsNavigation = () => {
     error,
     fetchNextPage,
     isFetchingNextPage,
-    query,
   } = useNotesContext();
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading) return <NotesSkeleton />;
-
-  const archivedNotes = notes.filter((n) => n.isArchived);
-  const pinnedNotes = notes.filter((n) => n.isPinned && !n.isArchived);
-  const unpinnedNotes = notes.filter((n) => {
-    if (query) {
-      return !n.isPinned;
-    } else if (!query) {
-      return !n.isPinned && !n.isArchived;
-    }
-  });
 
   return (
     <Tabs
@@ -49,11 +38,16 @@ const TabsNavigation = () => {
         className="pt-0"
       >
         <AddNewNote />
-        <Notes
+        <NotesList
+          notes={notes.pinnedNotes}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
-          pinnedNotes={pinnedNotes}
-          unpinnedNotes={unpinnedNotes}
+        />
+        <Divider className="my-3" />
+        <NotesList
+          notes={notes.unpinnedNotes}
+          fetchNextPage={fetchNextPage}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </Tab>
       <Tab
@@ -65,10 +59,10 @@ const TabsNavigation = () => {
           </div>
         }
       >
-        <Notes
+        <NotesList
+          notes={notes.archivedNotes}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
-          archivedNotes={archivedNotes}
         />
       </Tab>
     </Tabs>
