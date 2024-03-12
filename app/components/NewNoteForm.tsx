@@ -101,7 +101,7 @@ const NewNoteForm = ({
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
+            <Button color="danger" variant="flat" onPress={onClose}>
               Close
             </Button>
             <Button type="submit" color="primary">
