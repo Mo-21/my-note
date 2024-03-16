@@ -1,3 +1,4 @@
+"use client";
 import EditIcon from "../assets/EditIcon";
 import GripIcon from "../assets/GripIcon";
 import {
@@ -9,17 +10,22 @@ import {
 } from "@nextui-org/react";
 import PinIcon from "../assets/PinIcon";
 import DeleteIcon from "../assets/DeleteIcon";
-import { Note } from "@prisma/client";
+import { Note as PrismaNote, Tag } from "@prisma/client";
 import ArchiveNoteIcon from "../assets/ArchiveNoteIcon";
 import UnArchiveNoteIcon from "../assets/UnArchiveNoteIcon";
 import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { useActiveNote } from "../hooks/useActiveNote";
+import TagDropdown from "./TagDropdown";
+
+interface Note extends PrismaNote {
+  tags?: Tag[];
+}
+
+const iconClasses =
+  "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
 const NoteActionsDropdown = ({ note }: { note: Note }) => {
-  const iconClasses =
-    "text-xl text-default-500 pointer-events-none flex-shrink-0";
-
   const { dispatch } = useActiveNote();
   const { mutate } = useDeleteNote();
   const { mutate: updateNote } = useCreateAndUpdateNote(true);
@@ -39,16 +45,16 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
   };
 
   return (
-    <Dropdown>
-      <DropdownTrigger>
+    <Dropdown aria-label="Note Actions" shouldBlockScroll={false}>
+      <DropdownTrigger aria-label="Tag trigger">
         <Button isIconOnly variant="light" size="sm">
           <GripIcon width={20} height={20} />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu>
+      <DropdownMenu aria-label="Note Actions menu">
         <DropdownItem
+          aria-label="Note Actions item"
           key="edit"
-          color="success"
           startContent={
             <EditIcon width={20} height={20} className={iconClasses} />
           }
@@ -59,8 +65,8 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
           Edit
         </DropdownItem>
         <DropdownItem
+          aria-label="Note Actions item"
           key="pin"
-          color="primary"
           startContent={
             <PinIcon width={20} height={20} className={iconClasses} />
           }
@@ -69,8 +75,8 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
           {note.isPinned ? "Unpin" : "Pin"}
         </DropdownItem>
         <DropdownItem
+          aria-label="Note Actions item"
           key="archive"
-          color="warning"
           startContent={
             !note.isArchived ? (
               <ArchiveNoteIcon width={20} height={20} />
@@ -82,9 +88,12 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
         >
           {note.isArchived ? "Unarchive" : "Archive"}
         </DropdownItem>
+        <DropdownItem aria-label="Note Actions item" key="tag">
+          <TagDropdown noteId={note.id} tags={note.tags} />
+        </DropdownItem>
         <DropdownItem
+          aria-label="Note Actions item"
           key="delete"
-          color="danger"
           startContent={<DeleteIcon width={20} height={20} />}
           onClick={() => mutate(note.id)}
         >

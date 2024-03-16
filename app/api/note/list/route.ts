@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
         email: session.user.email,
       },
     },
+    include: { tags: true },
     orderBy: {
       updatedAt: "desc",
     },

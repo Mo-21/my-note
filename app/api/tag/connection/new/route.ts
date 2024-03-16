@@ -1,19 +1,17 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/prisma";
+import { Tag } from "@prisma/client";
 
-export async function PATCH(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const session = await getServerSession();
 
   if (!session || !session.user?.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
   const body: {
-    id: number;
-    content: string;
-    title?: string | null | undefined;
-    isPinned: boolean;
-    isArchived: boolean;
+    noteId: number;
+    tag: Tag;
   } = await req.json();
 
   if (!body)
@@ -21,15 +19,14 @@ export async function PATCH(req: NextRequest) {
 
   const updatedNote = await prisma?.note.update({
     where: {
-      id: body.id,
+      id: body.noteId,
     },
+
     data: {
-      title: body.title,
-      content: body.content,
-      isPinned: body.isPinned,
-      isArchived: body.isArchived,
+      tags: {
+        connect: body.tag,
+      },
     },
-    include: { tags: true },
   });
 
   return NextResponse.json(updatedNote, { status: 201 });
