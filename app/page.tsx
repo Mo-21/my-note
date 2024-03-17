@@ -3,11 +3,13 @@ import { Divider, Tab, Tabs } from "@nextui-org/react";
 import AddNewNote from "./AddNewNote";
 import NotesIcon from "./assets/NotesIcon";
 import ArchiveIcon from "./assets/ArchiveIcon";
+import TagIcon from "./assets/TagIcon";
 import ErrorCallout from "./components/ErrorCallout";
 import NotesSkeleton from "./skeletons/NotesSkeleton";
 import NotesList from "./components/NoteList";
 import { useNotesContext } from "./hooks/useNotesContext";
 import { Note } from "@prisma/client";
+import TagsTab from "./components/TagsTab";
 
 const TabsNavigation = () => {
   const {
@@ -31,6 +33,11 @@ const TabsNavigation = () => {
       icon: <ArchiveIcon width={22} height={22} />,
       title: "Archive",
       notes: [notes.archivedNotes],
+    },
+    {
+      key: "tagged-notes",
+      icon: <TagIcon width={22} height={22} />,
+      title: "Tag",
     },
   ];
 
@@ -58,7 +65,7 @@ const TabsNavigation = () => {
           <TabContent
             fetchNextPage={fetchNextPage}
             isFetchingNextPage={isFetchingNextPage}
-            notes={notes}
+            notes={notes || []}
             includeAddNew={includeAddNew || false}
           />
         </Tab>
@@ -76,16 +83,20 @@ const TabContent = ({
   return (
     <>
       {includeAddNew && <AddNewNote />}
-      {notes.map((noteGroup, index) => (
-        <div key={index}>
-          <NotesList
-            notes={noteGroup}
-            fetchNextPage={fetchNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
-          {index < notes.length - 1 && <Divider className="my-3" />}
-        </div>
-      ))}
+      {notes && notes.length > 0 ? (
+        notes.map((noteGroup, index) => (
+          <div key={index}>
+            <NotesList
+              notes={noteGroup}
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+            {index < notes.length - 1 && <Divider className="my-3" />}
+          </div>
+        ))
+      ) : (
+        <TagsTab />
+      )}
     </>
   );
 };
@@ -93,7 +104,7 @@ const TabContent = ({
 interface TabContentProps {
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
-  notes: Note[][];
+  notes?: Note[][];
   includeAddNew: boolean;
 }
 
