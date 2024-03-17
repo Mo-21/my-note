@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tag } from "@prisma/client";
+import toast from "react-hot-toast";
 
 interface NewTagType {
   name: string;
@@ -12,6 +13,8 @@ interface UpdatedTagType {
 
 interface ApiResponse {
   data: Tag[];
+  nextCursor: string | null;
+  hasMore: boolean;
 }
 
 interface MutationDataType {
@@ -33,6 +36,8 @@ const fetchNewTag = async (payload: NewTagType): Promise<Tag> => {
   });
 
   const data = await response.json();
+
+  if (response.status === 400) toast.error(data.message);
 
   return data;
 };
@@ -61,13 +66,15 @@ const useCreateTag = () => {
         "tags",
       ]) || {
         pageParam: [0],
-        pages: [{ data: [] }],
+        pages: [{ data: [], hasMore: true, nextCursor: "1" }],
       };
       queryClient.setQueryData<MutationDataType>(["tags"], {
         ...previousTags,
         pages: [
           {
-            data: [newTag, ...previousTags.pages[0].data],
+            data: [...previousTags.pages[0].data, newTag],
+            hasMore: previousTags.pages[0].hasMore,
+            nextCursor: previousTags.pages[0].nextCursor,
           },
           ...previousTags.pages.slice(1),
         ],
@@ -75,7 +82,7 @@ const useCreateTag = () => {
 
       return { oldTags: previousTags.pages[0].data };
     },
-    onSuccess: (newTag, previousNote) => {
+    onSuccess: (newTag, previousTags) => {
       queryClient.invalidateQueries({ queryKey: ["tags"] });
     },
     onError: (error, newTag, ctx) => {
@@ -87,6 +94,8 @@ const useCreateTag = () => {
           pages: [
             {
               data: ctx.oldTags,
+              hasMore: data.pages[0].hasMore,
+              nextCursor: data.pages[0].nextCursor,
             },
             ...data.pages.slice(1),
           ],
