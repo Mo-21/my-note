@@ -8,13 +8,28 @@ export async function POST(req: NextRequest) {
   if (!session || !session.user?.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
-  const body = await req.json();
+  const body: { name: string } = await req.json();
   if (!body)
     return NextResponse.json({ message: "incorrect request" }, { status: 400 });
+
+  const isExist = await prisma.tag.findMany({
+    where: {
+      name: body.name,
+    },
+  });
+
+  if (isExist)
+    return NextResponse.json(
+      { message: "Tag name must be unique" },
+      { status: 400 }
+    );
 
   const newTag = await prisma.tag.create({
     data: {
       name: body.name,
+      User: {
+        connect: { email: session.user.email },
+      },
     },
   });
 
