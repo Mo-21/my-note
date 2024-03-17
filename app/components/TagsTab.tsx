@@ -10,15 +10,11 @@ import useCreateTag from "../hooks/useCreateNewTag";
 import { NewTagSchemaType, tagSchema } from "@/prisma/schema/newTagSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toaster } from "react-hot-toast";
+import { useTagsContext } from "../hooks/useTagsContext";
 
 const TagsTab = () => {
-  const {
-    data: tags,
-    fetchNextPage,
-    isFetchingNextPage,
-    error,
-    isLoading,
-  } = useGetTags();
+  const { tags, fetchNextPage, isFetchingNextPage, isLoading, error } =
+    useTagsContext();
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading) return <NotesSkeleton />;
