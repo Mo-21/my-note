@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  if (isExist)
+  if (isExist.length > 0)
     return NextResponse.json(
       { message: "Tag name must be unique" },
       { status: 400 }
