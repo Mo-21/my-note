@@ -23,7 +23,7 @@ const fetchInfiniteData = async ({
   return data;
 };
 
-export const useGetTags = () => {
+export const useGetTags = (shouldFetch: boolean) => {
   return useInfiniteQuery<
     ApiResponse,
     Error,
@@ -40,5 +40,6 @@ export const useGetTags = () => {
       data: data.pages.flatMap((page) => page.data),
       nextCursor: data.pages[data.pages.length - 1].nextCursor,
     }),
+    enabled: shouldFetch,
   });
 };

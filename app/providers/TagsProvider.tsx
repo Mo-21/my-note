@@ -1,5 +1,6 @@
 import { PropsWithChildren, createContext } from "react";
 import { TaggedNotes, useGetTags } from "../hooks/useGetTags";
+import { usePathname } from "next/navigation";
 
 interface TagsContextType {
   tags:
@@ -19,13 +20,16 @@ export const TagsContext = createContext<TagsContextType>(
 );
 
 const TagsProvider = ({ children }: PropsWithChildren) => {
+  const pathname = usePathname();
+  const shouldFetch = pathname === "/"; // Only fetch on the homepage
+
   const {
     data: tags,
     fetchNextPage,
     isFetchingNextPage,
     error,
     isLoading,
-  } = useGetTags();
+  } = useGetTags(shouldFetch);
 
   return (
     <TagsContext.Provider

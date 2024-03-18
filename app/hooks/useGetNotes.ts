@@ -23,7 +23,7 @@ const fetchInfiniteData = async ({
   return data;
 };
 
-export const useGetInfiniteNotes = () => {
+export const useGetInfiniteNotes = (shouldFetch: boolean) => {
   return useInfiniteQuery<
     ApiResponse,
     Error,
@@ -40,5 +40,6 @@ export const useGetInfiniteNotes = () => {
       data: data.pages.flatMap((page) => page.data),
       nextCursor: data.pages[data.pages.length - 1].nextCursor,
     }),
+    enabled: shouldFetch,
   });
 };

@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useGetInfiniteNotes } from "../hooks/useGetNotes";
+import { usePathname } from "next/navigation";
 
 interface NotesContextType {
   filteredNotes: {
@@ -28,6 +29,8 @@ export const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
 
 export const NotesProvider = ({ children }: PropsWithChildren) => {
   const [query, setQuery] = useState<string>("");
+  const pathname = usePathname();
+  const shouldFetch = pathname === "/"; // Only fetch on the homepage
 
   const {
     data: notes,
@@ -35,7 +38,7 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
     error,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetInfiniteNotes();
+  } = useGetInfiniteNotes(shouldFetch);
 
   const filteredNotes = useMemo(() => {
     if (!notes?.data)
@@ -60,6 +63,8 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
 
     return { pinnedNotes, unpinnedNotes, archivedNotes };
   }, [notes, query]);
+
+  if (!filteredNotes) return;
 
   return (
     <NotesCtx.Provider
