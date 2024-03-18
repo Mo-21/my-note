@@ -80,7 +80,7 @@ const TagDropdown = ({ tags, note }: TagDropdownProps) => {
               const selectedId = e.target.value;
               if (!availableTags) return;
               const selectedTag = availableTags.data.find(
-                (tag) => tag.id === parseInt(selectedId, 10)
+                (tag) => tag.id === selectedId
               );
               if (!selectedTag) return;
               mutate({

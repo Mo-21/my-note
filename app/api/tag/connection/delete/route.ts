@@ -8,7 +8,7 @@ export async function DELETE(req: NextRequest) {
   if (!session || !session.user?.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
-  const body: number = await req.json();
+  const body: string = await req.json();
 
   if (!body)
     return NextResponse.json({ message: "No ID provided" }, { status: 403 });

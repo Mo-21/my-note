@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
       updatedAt: "desc",
     },
     take: limit + 1,
-    cursor: cursor ? { id: cursor } : undefined,
+    cursor: cursor ? { id: cursor.toString() } : undefined,
   });
 
   const hasMore = notes ? notes.length > limit : false;

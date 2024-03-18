@@ -8,7 +8,7 @@ export interface NewNoteType {
 }
 
 interface UpdatedNoteType {
-  id: number;
+  id: string;
   content: string;
   title?: string | null | undefined;
   isPinned: boolean;

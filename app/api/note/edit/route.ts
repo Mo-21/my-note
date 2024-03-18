@@ -9,7 +9,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
   const body: {
-    id: number;
+    id: string;
     content: string;
     title?: string | null | undefined;
     isPinned: boolean;
