@@ -3,7 +3,7 @@ import { useGetTags } from "../hooks/useGetTags";
 import NotesList from "./NoteList";
 import ErrorCallout from "./ErrorCallout";
 import NotesSkeleton from "../skeletons/NotesSkeleton";
-import { Tab, Tabs, Input, Button } from "@nextui-org/react";
+import { Tab, Tabs, Input, Button, Divider } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import AddIcon from "../assets/AddIcon";
 import useCreateTag from "../hooks/useCreateNewTag";
@@ -11,10 +11,13 @@ import { NewTagSchemaType, tagSchema } from "@/prisma/schema/newTagSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toaster } from "react-hot-toast";
 import { useTagsContext } from "../hooks/useTagsContext";
+import useDeleteTag from "../hooks/useDeleteTag";
 
 const TagsTab = () => {
   const { tags, fetchNextPage, isFetchingNextPage, isLoading, error } =
     useTagsContext();
+
+  const { mutate: deleteTag } = useDeleteTag();
 
   if (error) return <ErrorCallout>{error.message}</ErrorCallout>;
   if (isLoading) return <NotesSkeleton />;
@@ -37,6 +40,17 @@ const TagsTab = () => {
             key={index}
             title={<div className="flex items-center space-x-2">{t.name}</div>}
           >
+            <div className="p-3">
+              <Button
+                onClick={() => deleteTag(t.id)}
+                color="danger"
+                variant="flat"
+                className="m-2"
+              >
+                Delete Tag
+              </Button>
+              <Divider />
+            </div>
             <NotesList
               notes={t.notes}
               fetchNextPage={fetchNextPage}
