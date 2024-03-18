@@ -36,22 +36,36 @@ const NavbarDropdown = () => {
             className="w-12 h-12 rounded-full cursor-pointer"
             src={defaultImage}
             alt="user-image"
+            priority={true}
           />
         )}
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <DropdownItem key="profile" className="h-14 gap-2">
+        <DropdownItem
+          aria-label="Sign in user"
+          key="profile"
+          className="h-14 gap-2"
+        >
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">{data.user.name}</p>
         </DropdownItem>
-        <DropdownItem key="email" className="h-14 gap-2">
+        <DropdownItem
+          aria-label="Sign in email"
+          key="email"
+          className="h-14 gap-2"
+        >
           <p className="font-semibold">Email</p>
           <p className="font-semibold">{data.user.email}</p>
         </DropdownItem>
-        <DropdownItem textValue="Change Theme" key="theme">
+        <DropdownItem
+          aria-label="Theme Switch"
+          textValue="Change Theme"
+          key="theme"
+        >
           <ThemeSwitch />
         </DropdownItem>
         <DropdownItem
+          aria-label="Log out"
           onClick={() => {
             router.push("api/auth/signout");
           }}
