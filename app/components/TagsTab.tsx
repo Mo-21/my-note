@@ -75,10 +75,11 @@ const CreateTag = () => {
     e?.stopPropagation();
 
     mutateNewTag({
-      id: -1,
+      id: "-1",
       name: data.name,
       createdAt: new Date(),
-      userId: -1,
+      userId: "-1",
+      notesIDs: [],
     });
 
     reset({ name: "" });

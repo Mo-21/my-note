@@ -6,7 +6,7 @@ const useDeleteTag = () => {
 
   return useMutation({
     mutationKey: ["infinite_notes"],
-    mutationFn: async (tagId: number) => {
+    mutationFn: async (tagId: string) => {
       const response = await fetch("/api/tag/connection/delete", {
         method: "DELETE",
         body: JSON.stringify(tagId),

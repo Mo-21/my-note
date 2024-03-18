@@ -48,15 +48,16 @@ const NewNoteForm = ({
     e?.stopPropagation();
 
     mutate({
-      id: note ? note.id : -1,
+      id: note ? note.id : "-1",
       title: data.title ? data.title : "",
       content: noteType === "CHECKBOX" ? getValues("content") : data.content,
-      userId: -1,
+      userId: "-1",
       NoteType: noteType,
       createdAt: note ? note.createdAt : new Date(),
       updatedAt: new Date(),
       isPinned: false,
       isArchived: note ? note.isArchived : false,
+      tagsIDs: note?.tagsIDs ? note.tagsIDs : [],
     });
 
     reset();

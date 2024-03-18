@@ -35,12 +35,13 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
       id: note.id,
       title: note.title ? note.title : "",
       content: note.content,
-      userId: -1,
+      userId: "-1",
       NoteType: note.NoteType,
       createdAt: note.createdAt,
       updatedAt: new Date(),
       isPinned: key === "PIN" ? !note.isPinned : note.isPinned,
       isArchived: key === "ARCHIVE" ? !note.isArchived : note.isArchived,
+      tagsIDs: note?.tagsIDs ? note.tagsIDs : [],
     });
   };
 
@@ -95,7 +96,7 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
           aria-label="Note Actions item"
           key="delete"
           startContent={<DeleteIcon width={20} height={20} />}
-          onClick={() => mutate(note.id)}
+          onClick={() => mutate(note.id.toString())}
         >
           Delete
         </DropdownItem>

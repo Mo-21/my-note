@@ -6,7 +6,7 @@ const useDeleteNote = () => {
 
   return useMutation({
     mutationKey: ["infinite_notes"],
-    mutationFn: async (noteID: number) => {
+    mutationFn: async (noteID: string) => {
       const response = await fetch("/api/note/delete", {
         method: "DELETE",
         body: JSON.stringify(noteID),
