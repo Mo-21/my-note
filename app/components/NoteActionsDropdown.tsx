@@ -89,7 +89,7 @@ const NoteActionsDropdown = ({ note }: { note: Note }) => {
           {note.isArchived ? "Unarchive" : "Archive"}
         </DropdownItem>
         <DropdownItem aria-label="Note Actions item" key="tag">
-          <TagDropdown noteId={note.id} tags={note.tags} />
+          <TagDropdown note={note} tags={note.tags} />
         </DropdownItem>
         <DropdownItem
           aria-label="Note Actions item"

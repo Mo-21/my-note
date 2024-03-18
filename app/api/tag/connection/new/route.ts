@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/prisma";
-import { Tag } from "@prisma/client";
+import { Note, Tag } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
 
   const body: {
-    noteId: number;
+    note: Note;
     tag: Tag;
   } = await req.json();
 
@@ -19,12 +19,14 @@ export async function POST(req: NextRequest) {
 
   const updatedNote = await prisma?.note.update({
     where: {
-      id: body.noteId,
+      id: body.note.id,
     },
 
     data: {
       tags: {
-        connect: body.tag,
+        connect: {
+          id: body.tag.id,
+        },
       },
     },
   });

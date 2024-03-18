@@ -1,53 +1,30 @@
 "use client";
-import AddIcon from "../assets/AddIcon";
 import { useState } from "react";
 import RightArrowIcon from "../assets/RightArrowIcon";
 import TagIcon from "../assets/TagIcon";
 import {
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
-  Input,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
-import { Tag } from "@prisma/client";
-import { useForm, SubmitHandler } from "react-hook-form";
-import useCreateTag from "../hooks/useCreateNewTag";
-import { useNotesContext } from "../hooks/useNotesContext";
+import { Tag, Note } from "@prisma/client";
+import { SelectorIcon } from "../assets/SelectorIcon";
+import { useTagsContext } from "../hooks/useTagsContext";
 import { useCreateTagConnection } from "../hooks/useCreateTagConnection";
 
 interface TagDropdownProps {
   tags?: Tag[];
-  noteId: number;
+  note: Note;
 }
 
-const TagDropdown = ({ tags, noteId }: TagDropdownProps) => {
+const TagDropdown = ({ tags, note }: TagDropdownProps) => {
   const [isChildDropdownOpen, setIsChildDropdownOpen] = useState(false);
-
-  const { register, handleSubmit } = useForm<{ tagName: string }>();
-  const { mutateAsync: mutateNewTag } = useCreateTag();
-  const { mutateAsync: mutateConnection } = useCreateTagConnection();
-  const { refetch } = useNotesContext();
-
-  const formSubmit: SubmitHandler<{ tagName: string }> = async (data, e) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-
-    try {
-      const tag = await mutateNewTag({
-        id: -1,
-        name: data.tagName,
-        createdAt: new Date(),
-      });
-
-      await mutateConnection({ tag, noteId });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      refetch();
-    }
-  };
+  const { tags: availableTags } = useTagsContext();
+  const { mutate } = useCreateTagConnection();
 
   return (
     <Dropdown aria-label="Tags" isOpen={isChildDropdownOpen}>
@@ -77,28 +54,51 @@ const TagDropdown = ({ tags, noteId }: TagDropdownProps) => {
           setIsChildDropdownOpen(false);
         }}
       >
-        <DropdownItem
-          aria-label="Tag item"
-          key="tag"
-          startContent={tags && tags.map((t) => <div key={t.id}>{t.name}</div>)}
-        />
+        <DropdownSection title="Note Tags" showDivider>
+          <DropdownItem
+            aria-label="Tag item"
+            key="tag"
+            startContent={
+              tags &&
+              tags.map((t) => (
+                <div className="flex items-center gap-2" key={t.id}>
+                  <TagIcon width={20} height={20} />
+                  <div>{t.name}</div>
+                </div>
+              ))
+            }
+          />
+        </DropdownSection>
         <DropdownItem aria-label="Tag item">
-          <div aria-label="Tag options" className="flex gap-2 items-center">
-            <Input
-              size="sm"
-              type="text"
-              placeholder="Create new tag"
-              {...register("tagName")}
-            />
-            <Button
-              onClick={handleSubmit(formSubmit)}
-              isIconOnly
-              size="sm"
-              variant="light"
-            >
-              <AddIcon width={30} height={30} />
-            </Button>
-          </div>
+          <Select
+            size="sm"
+            aria-label="Tag selection"
+            placeholder="Select a tag"
+            className="max-w-xs"
+            selectorIcon={<SelectorIcon width={20} height={20} />}
+            onChange={(e) => {
+              const selectedId = e.target.value;
+              if (!availableTags) return;
+              const selectedTag = availableTags.data.find(
+                (tag) => tag.id === parseInt(selectedId, 10)
+              );
+              if (!selectedTag) return;
+              mutate({
+                note,
+                tag: selectedTag,
+              });
+            }}
+          >
+            {availableTags && availableTags.data ? (
+              availableTags.data.map((t) => (
+                <SelectItem key={t.id} value={t.id}>
+                  {t.name}
+                </SelectItem>
+              ))
+            ) : (
+              <></>
+            )}
+          </Select>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
