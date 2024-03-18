@@ -1,8 +1,12 @@
-import { Note } from "@prisma/client";
+import { Note, Tag } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+export interface NoteWithTags extends Note {
+  tags: Tag[];
+}
+
 interface ApiResponse {
-  data: Note[];
+  data: NoteWithTags[];
   nextCursor: string | null;
   hasMore: boolean;
 }
