@@ -22,7 +22,6 @@ interface NotesContextType {
   isFetchingNextPage: boolean;
   setQuery: Dispatch<SetStateAction<string>>;
   query: string;
-  refetch: any;
 }
 
 export const NotesCtx = createContext<NotesContextType>({} as NotesContextType);
@@ -36,7 +35,6 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
     error,
     fetchNextPage,
     isFetchingNextPage,
-    refetch,
   } = useGetInfiniteNotes();
 
   const filteredNotes = useMemo(() => {
@@ -73,7 +71,6 @@ export const NotesProvider = ({ children }: PropsWithChildren) => {
         error,
         fetchNextPage,
         isFetchingNextPage,
-        refetch,
       }}
     >
       {children}
