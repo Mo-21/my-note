@@ -34,6 +34,7 @@ const UploadUserImage = ({ setValue }: UploadPageProps) => {
           src={defaultImage}
           alt="image"
           className="rounded-full"
+          priority={true}
         />
       )}
 
