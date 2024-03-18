@@ -7,8 +7,12 @@ import {
 import { AcmeLogo } from "./assets/AcmeLogo";
 import SearchInput from "./components/SearchInput";
 import NavbarDropdown from "./components/NavbarDropdown";
+import { getServerSession } from "next-auth/next";
 
-const NavigationBar = () => {
+const NavigationBar = async () => {
+  const session = await getServerSession();
+  if (!session || !session.user?.email) return;
+
   return (
     <Navbar isBordered>
       <NavbarContent className="justify-between">
