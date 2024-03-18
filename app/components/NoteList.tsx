@@ -46,8 +46,7 @@ const NotesList = ({
     "hover:bg-[#2c3e50]": theme === "dark",
   });
 
-  if (notes.length === 0)
-    return <div className="text-center mt-3">There are no notes here</div>;
+  if (notes.length === 0) return <></>;
 
   return (
     <div className="flex flex-col gap-1 items-center">
