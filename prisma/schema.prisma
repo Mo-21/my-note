@@ -14,37 +14,26 @@ datasource db {
 }
 
 model Note {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   title      String?
-  content    String    @db.LongText
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  User       User?     @relation(fields: [userId], references: [id])
+  content    String   @db.LongText
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  User       User?    @relation(fields: [userId], references: [id])
   userId     Int?
-  NoteType   NoteType  @default(EDITOR)
-  isPinned   Boolean   @default(false)
-  isArchived Boolean   @default(false)
-  tags       Tag[]     @relation("NoteTags")
-  NoteTag    NoteTag[]
+  NoteType   NoteType @default(EDITOR)
+  isPinned   Boolean  @default(false)
+  isArchived Boolean  @default(false)
+  tags       Tag[]    @relation("NoteTags")
 }
 
 model Tag {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  notes     Note[]    @relation("NoteTags")
-  NoteTag   NoteTag[]
-  User      User?     @relation(fields: [userId], references: [id])
+  notes     Note[]   @relation("NoteTags")
+  User      User?    @relation(fields: [userId], references: [id])
   userId    Int?
-  createdAt DateTime  @default(now())
-}
-
-model NoteTag {
-  note   Note @relation(fields: [noteId], references: [id])
-  noteId Int
-  tag    Tag  @relation(fields: [tagId], references: [id])
-  tagId  Int
-
-  @@id([noteId, tagId])
+  createdAt DateTime @default(now())
 }
 
 model User {
