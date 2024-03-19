@@ -46,11 +46,11 @@ const NotesList = ({
     "hover:bg-[#2c3e50]": theme === "dark",
   });
 
-  if (notes.length === 0) return <></>;
+  if (!notes || notes.length === 0) return <></>;
 
   return (
-    <div className="flex flex-col gap-1 items-center">
-      <div className="flex w-full gap-2 flex-wrap px-5 justify-center sm:justify-start">
+    <div className="flex justify-center">
+      <div className="flex w-full gap-2 flex-wrap px-5 justify-between sm:justify-start">
         {notes.map((note, index) => (
           <Atropos
             activeOffset={10}
