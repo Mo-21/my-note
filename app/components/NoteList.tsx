@@ -40,7 +40,7 @@ const NotesList = ({
   }, [inView, fetchNextPage]);
 
   const cardStyle = classNames({
-    "flex flex-col w-[300px] min-h-[250px] transition-colors duration-150 ease-in-out":
+    "flex flex-col w-[170px] h-[200px] transition-colors duration-150 ease-in-out sm:w-[300px] sm:h-[250px]":
       true,
     "hover:bg-[#f5f5f5]": theme === "light",
     "hover:bg-[#2c3e50]": theme === "dark",
@@ -50,7 +50,7 @@ const NotesList = ({
 
   return (
     <div className="flex flex-col gap-1 items-center">
-      <div className="flex w-full gap-2 flex-wrap px-5 justify-start">
+      <div className="flex w-full gap-2 flex-wrap px-5 justify-center sm:justify-start">
         {notes.map((note, index) => (
           <Atropos
             activeOffset={10}
@@ -62,7 +62,7 @@ const NotesList = ({
           >
             <Card className={cardStyle}>
               {note.title && <NoteTitle title={note.title} />}
-              <CardBody className="flex-grow">
+              <CardBody className="flex-grow overflow-hidden">
                 <NoteBody note={note} />
               </CardBody>
               <Divider />
