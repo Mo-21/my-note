@@ -55,7 +55,7 @@ const NewNoteForm = ({
       NoteType: noteType,
       createdAt: note ? note.createdAt : new Date(),
       updatedAt: new Date(),
-      isPinned: false,
+      isPinned: note ? note.isPinned : false,
       isArchived: note ? note.isArchived : false,
       tagsIDs: note?.tagsIDs ? note.tagsIDs : [],
     });
