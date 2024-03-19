@@ -9,7 +9,6 @@ import AddIcon from "../assets/AddIcon";
 import useCreateTag from "../hooks/useCreateNewTag";
 import { NewTagSchemaType, tagSchema } from "@/prisma/schema/newTagSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster } from "react-hot-toast";
 import { useTagsContext } from "../hooks/useTagsContext";
 import useDeleteTag from "../hooks/useDeleteTag";
 
@@ -59,7 +58,6 @@ const TagsTab = () => {
           </Tab>
         ))}
       </Tabs>
-      <Toaster />
     </div>
   );
 };

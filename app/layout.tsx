@@ -4,6 +4,7 @@ import "./globals.css";
 import "atropos/css";
 import { Providers } from "./providers/providers";
 import NavigationBar from "./NavigationBar";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <Providers>
           <NavigationBar />
           <main className="h-screen">{children}</main>
+          <Toaster />
         </Providers>
       </body>
     </html>

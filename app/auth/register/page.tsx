@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import UploadUserImage from "./_components/UploadUserImage";
 import RegistrationInputFields from "./_components/RegistrationInputFields";
 
@@ -66,7 +66,6 @@ const Registration = () => {
           Submit
         </Button>
       </form>
-      <Toaster />
     </div>
   );
 };

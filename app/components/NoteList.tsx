@@ -9,7 +9,6 @@ import {
 import { Note } from "@prisma/client";
 import NewNoteForm from "./NewNoteForm";
 import NoteModal from "./NoteModal";
-import { Toaster } from "react-hot-toast";
 import CheckboxModal from "./CheckboxModal";
 import Atropos from "atropos/react";
 import { useTheme } from "next-themes";
@@ -90,7 +89,6 @@ const NotesList = ({
             note={state.activeNote}
           />
         )}
-        <Toaster />
       </div>
       <div ref={ref}>{isFetchingNextPage && <Spinner />}</div>
     </div>
