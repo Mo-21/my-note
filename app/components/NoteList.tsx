@@ -48,7 +48,7 @@ const NotesList = ({
   if (!notes || notes.length === 0) return <></>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center justify-center">
       <div className="flex w-full gap-2 flex-wrap px-5 justify-between sm:justify-start">
         {notes.map((note, index) => (
           <Atropos
