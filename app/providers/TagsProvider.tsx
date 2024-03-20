@@ -6,7 +6,6 @@ interface TagsContextType {
   tags:
     | {
         data: TaggedNotes[];
-        nextCursor: string | null;
       }
     | undefined;
   isFetchingNextPage: boolean;
