@@ -1,5 +1,4 @@
 "use client";
-import { useGetTags } from "../hooks/useGetTags";
 import NotesList from "./NoteList";
 import ErrorCallout from "./ErrorCallout";
 import NotesSkeleton from "../skeletons/NotesSkeleton";
