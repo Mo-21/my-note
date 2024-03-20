@@ -8,14 +8,9 @@ export async function GET(req: NextRequest) {
   if (!session || !session.user || !session.user.email)
     return NextResponse.json({ message: "Unauthorized" }, { status: 402 });
 
-  const cursorParam = req.nextUrl.searchParams.get("cursor");
+  const cursor = parseInt(req.nextUrl.searchParams.get("cursor")!, 10);
   const limit = parseInt(req.nextUrl.searchParams.get("limit") || "10", 10);
-
-  let cursor = cursorParam ? parseInt(cursorParam, 10) : null;
-  if (cursor && isNaN(cursor)) {
-    // Check if cursor is NaN after conversion attempt
-    cursor = null; // Reset cursor to null if conversion failed
-  }
+  const skip = (cursor - 1) * limit;
 
   const tags = await prisma?.tag.findMany({
     where: {
@@ -24,15 +19,12 @@ export async function GET(req: NextRequest) {
       },
     },
     include: { notes: true },
-    take: limit + 1,
-    cursor: cursor ? { id: cursor.toString() } : undefined,
+    skip,
+    take: limit,
   });
 
-  const hasMore = tags ? tags.length > limit : false;
-  const nextCursor = hasMore ? tags?.pop()?.id : null;
+  const totalTags = await prisma.tag.count();
+  const hasMore = skip + limit < totalTags;
 
-  return NextResponse.json(
-    { data: tags, hasMore, nextCursor },
-    { status: 200 }
-  );
+  return NextResponse.json({ data: tags, hasMore }, { status: 200 });
 }

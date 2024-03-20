@@ -7,7 +7,6 @@ export interface NoteWithTags extends Note {
 
 interface ApiResponse {
   data: NoteWithTags[];
-  nextCursor: string | null;
   hasMore: boolean;
 }
 
@@ -24,21 +23,15 @@ const fetchInfiniteData = async ({
 };
 
 export const useGetInfiniteNotes = (shouldFetch: boolean) => {
-  return useInfiniteQuery<
-    ApiResponse,
-    Error,
-    { data: Note[]; nextCursor: string | null },
-    [string]
-  >({
+  return useInfiniteQuery<ApiResponse, Error, { data: Note[] }, [string]>({
     queryKey: ["infinite_notes"],
     queryFn: fetchInfiniteData,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasMore ? lastPage.nextCursor : undefined;
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasMore ? allPages.length + 1 : undefined;
     },
     select: (data) => ({
       data: data.pages.flatMap((page) => page.data),
-      nextCursor: data.pages[data.pages.length - 1].nextCursor,
     }),
     enabled: shouldFetch,
   });

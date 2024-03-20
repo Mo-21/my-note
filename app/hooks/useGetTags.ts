@@ -7,11 +7,10 @@ export interface TaggedNotes extends Tag {
 
 interface ApiResponse {
   data: TaggedNotes[];
-  nextCursor: string | null;
   hasMore: boolean;
 }
 
-const LIMIT = 20;
+const LIMIT = 10;
 
 const fetchInfiniteData = async ({
   pageParam,
@@ -27,18 +26,17 @@ export const useGetTags = (shouldFetch: boolean) => {
   return useInfiniteQuery<
     ApiResponse,
     Error,
-    { data: TaggedNotes[]; nextCursor: string | null },
+    { data: TaggedNotes[] },
     [string]
   >({
     queryKey: ["tags"],
     queryFn: fetchInfiniteData,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasMore ? lastPage.nextCursor : undefined;
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasMore ? allPages.length + 1 : undefined;
     },
     select: (data) => ({
       data: data.pages.flatMap((page) => page.data),
-      nextCursor: data.pages[data.pages.length - 1].nextCursor,
     }),
     enabled: shouldFetch,
   });
