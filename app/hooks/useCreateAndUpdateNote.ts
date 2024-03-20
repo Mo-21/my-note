@@ -17,11 +17,10 @@ interface UpdatedNoteType {
 
 interface ApiResponse {
   data: Note[];
-  nextCursor: string | null;
   hasMore: boolean;
 }
 
-interface MutationDataType {
+export interface MutationDataType {
   pageParam: number[];
   pages: ApiResponse[];
 }
@@ -83,7 +82,6 @@ const useCreateAndUpdateNote = (isUpdating: boolean) => {
                 ]
               : [newNote, ...previousNotes.pages[0].data],
             hasMore: previousNotes.pages[0].hasMore,
-            nextCursor: previousNotes.pages[0].nextCursor,
           },
           ...previousNotes.pages.slice(1),
         ],
@@ -104,7 +102,6 @@ const useCreateAndUpdateNote = (isUpdating: boolean) => {
             {
               data: ctx.oldNotes,
               hasMore: data.pages[0].hasMore,
-              nextCursor: data.pages[0].nextCursor,
             },
             ...data.pages.slice(1),
           ],

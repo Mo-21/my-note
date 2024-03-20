@@ -13,11 +13,10 @@ interface UpdatedTagType {
 
 interface ApiResponse {
   data: Tag[];
-  nextCursor: string | null;
   hasMore: boolean;
 }
 
-interface MutationDataType {
+export interface MutationTagType {
   pageParam: number[];
   pages: ApiResponse[];
 }
@@ -62,19 +61,18 @@ const useCreateTag = () => {
     mutationKey: ["tags"],
     mutationFn: fetchNewTag,
     onMutate: async (newTag) => {
-      const previousTags = queryClient.getQueryData<MutationDataType>([
+      const previousTags = queryClient.getQueryData<MutationTagType>([
         "tags",
       ]) || {
         pageParam: [0],
         pages: [{ data: [], hasMore: true, nextCursor: "1" }],
       };
-      queryClient.setQueryData<MutationDataType>(["tags"], {
+      queryClient.setQueryData<MutationTagType>(["tags"], {
         ...previousTags,
         pages: [
           {
             data: [...previousTags.pages[0].data, newTag],
             hasMore: previousTags.pages[0].hasMore,
-            nextCursor: previousTags.pages[0].nextCursor,
           },
           ...previousTags.pages.slice(1),
         ],
@@ -87,15 +85,14 @@ const useCreateTag = () => {
     },
     onError: (error, newTag, ctx) => {
       if (!ctx) return;
-      queryClient.setQueryData<MutationDataType>(["tags"], (data) => {
+      queryClient.setQueryData<MutationTagType>(["tags"], (data) => {
         if (!data) return data;
-        const previousData: MutationDataType = {
+        const previousData: MutationTagType = {
           ...data,
           pages: [
             {
               data: ctx.oldTags,
               hasMore: data.pages[0].hasMore,
-              nextCursor: data.pages[0].nextCursor,
             },
             ...data.pages.slice(1),
           ],
