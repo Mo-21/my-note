@@ -25,14 +25,17 @@ const TabsNavigation = () => {
       key: "notes",
       icon: <NotesIcon width={22} height={22} />,
       title: "Notes",
-      notes: [notes.pinnedNotes, notes.unpinnedNotes],
+      notes: [
+        { key: "PINNED", data: notes.pinnedNotes },
+        { key: "UNPINNED", data: notes.unpinnedNotes },
+      ],
       includeAddNew: true,
     },
     {
       key: "archived-notes",
       icon: <ArchiveIcon width={22} height={22} />,
       title: "Archive",
-      notes: [notes.archivedNotes],
+      notes: [{ key: "ARCHIVED", data: notes.archivedNotes }],
     },
     {
       key: "tagged-notes",
@@ -87,7 +90,8 @@ const TabContent = ({
         notes.map((noteGroup, index) => (
           <div key={index}>
             <NotesList
-              notes={noteGroup}
+              notes={noteGroup.data}
+              noteKey={noteGroup.key}
               fetchNextPage={fetchNextPage}
               isFetchingNextPage={isFetchingNextPage}
             />
@@ -104,7 +108,10 @@ const TabContent = ({
 interface TabContentProps {
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
-  notes?: Note[][];
+  notes?: {
+    key: string;
+    data: Note[];
+  }[];
   includeAddNew: boolean;
 }
 

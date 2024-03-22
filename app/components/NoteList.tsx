@@ -20,6 +20,7 @@ import { useEffect } from "react";
 
 interface NotesListProps {
   notes: Note[];
+  noteKey: string;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 }
@@ -28,15 +29,10 @@ const NotesList = ({
   fetchNextPage,
   isFetchingNextPage,
   notes,
+  noteKey,
 }: NotesListProps) => {
   const { state, dispatch } = useActiveNote();
   const { theme } = useTheme();
-
-  const { ref, inView } = useInView();
-
-  useEffect(() => {
-    if (inView) fetchNextPage();
-  }, [inView, fetchNextPage]);
 
   const cardStyle = classNames({
     "flex flex-col w-[170px] h-[200px] transition-colors duration-150 ease-in-out sm:w-[300px] sm:h-[250px]":
@@ -90,9 +86,30 @@ const NotesList = ({
           />
         )}
       </div>
-      <div ref={ref}>{isFetchingNextPage && <Spinner />}</div>
+      {noteKey !== "PINNED" && (
+        <InView
+          fetchNextPage={fetchNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      )}
     </div>
   );
+};
+
+const InView = ({
+  fetchNextPage,
+  isFetchingNextPage,
+}: {
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+}) => {
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) fetchNextPage();
+  }, [inView, fetchNextPage]);
+
+  return <div ref={ref}>{isFetchingNextPage && <Spinner />}</div>;
 };
 
 const NoteTitle = ({ title }: { title: string }) => {

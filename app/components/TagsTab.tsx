@@ -50,6 +50,7 @@ const TagsTab = () => {
               <Divider />
             </div>
             <NotesList
+              noteKey="UNPINNED"
               notes={t.notes}
               fetchNextPage={fetchNextPage}
               isFetchingNextPage={isFetchingNextPage}
