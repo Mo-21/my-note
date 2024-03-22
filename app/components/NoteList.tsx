@@ -127,7 +127,7 @@ const NoteBody = ({ note }: { note: Note }) => {
       {note.NoteType === "CHECKBOX" ? (
         <CheckboxModal isPreviewing={false} note={note} />
       ) : (
-        <p>{formatNote(note)}</p>
+        <p>{note.content}</p>
       )}
     </>
   );
@@ -144,14 +144,6 @@ const NoteFooter = ({ note }: { note: Note }) => {
       </div>
     </>
   );
-};
-
-const formatNote = (note: Note) => {
-  return note.title && note.content.length > 100
-    ? note.content.slice(0, 101) + "..."
-    : !note.title && note.content.length > 100
-    ? note.content.slice(0, 221) + "..."
-    : note.content;
 };
 
 export default NotesList;
