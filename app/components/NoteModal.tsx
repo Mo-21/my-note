@@ -101,6 +101,14 @@ const MarkdownViewer = ({ children }: { children: string }) => {
         {...props}
       />
     ),
+
+    //customizing code
+    code: ({ ...props }) => (
+      <code
+        style={{ color: theme === "dark" ? "white" : "black" }}
+        {...props}
+      />
+    ),
   };
   return (
     <ReactMarkdown
