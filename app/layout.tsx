@@ -20,6 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <title>My Note</title>
+      </head>
       <body className={inter.className}>
         <Providers>
           <NavigationBar />
