@@ -57,11 +57,11 @@ const NotesList = ({
           >
             <Card className={cardStyle}>
               {note.title && <NoteTitle title={note.title} />}
-              <CardBody className="flex-grow overflow-hidden">
+              <CardBody className="flex-grow overflow-hidden h-full">
                 <NoteBody note={note} />
               </CardBody>
               <Divider />
-              <CardFooter className="flex justify-between items-center mt-auto h-10">
+              <CardFooter className="flex justify-between items-center mt-auto h-8">
                 <NoteFooter note={note} />
               </CardFooter>
             </Card>
