@@ -90,7 +90,7 @@ const CreateTag = () => {
           variant="underlined"
           size="sm"
           type="text"
-          placeholder="Create new tag"
+          placeholder="Tag name"
           {...register("name")}
         />
         <Button
