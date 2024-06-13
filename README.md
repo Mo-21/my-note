@@ -1,6 +1,6 @@
 # My Note
 
-My Note is a dynamic and feature-rich note-taking application built with modern web technologies including Next.js 14, TypeScript, NextAuth for authentication, NextUI for UI components, React Query for data fetching and state management, and Prisma as the ORM for interacting with the database. This application allows users to effortlessly create, edit, delete, pin, archive, and tag their notes. With the seamless integration of React Query's optimistic updates, all actions are reflected instantly in the UI without a single page refresh, providing a smooth and responsive user experience.
+My Note is a dynamic and feature-rich note-taking application built with modern web technologies including Next.js 14, TypeScript, NextAuth, NextUI, React Query for data fetching and state management, and Prisma. This application allows users to effortlessly create, edit, delete, pin, archive, and tag their notes. With the seamless integration of React Query's optimistic updates, all actions are reflected instantly in the UI without a single page refresh, providing a smooth and responsive user experience.
 
 ![homepage](./public/mynote-homepage.png)
 
@@ -19,7 +19,7 @@ The note can be created with:
 
 1. Quick Note: a plain text note with no support for any markdown elements. It is meant to be simple, quick and efficient.
 2. Editor: thanks to `react-simplemde-editor`, a note can be styled with full fledge of styles and tools, such as: code, ordered lists, unordered lists, heading, bold and much more.
-3. Checkbox: a todo like note with nice checkboxes from RadixUI with smooth experience.
+3. Checkbox: a todo like note with nice checkboxes from NextUI with smooth experience.
 
 ![editor](./public/mynote-editor.png)
 
