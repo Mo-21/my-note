@@ -2,6 +2,8 @@
 
 My Note is a dynamic and feature-rich note-taking application built with modern web technologies including Next.js 14, TypeScript, NextAuth for authentication, NextUI for UI components, React Query for data fetching and state management, and Prisma as the ORM for interacting with the database. This application allows users to effortlessly create, edit, delete, pin, archive, and tag their notes. With the seamless integration of React Query's optimistic updates, all actions are reflected instantly in the UI without a single page refresh, providing a smooth and responsive user experience.
 
+![homepage](./public/mynote-homepage.png)
+
 ## Features
 
 - **User Authentication**: Secure registration, login, and logout functionality powered by NextAuth.
@@ -10,6 +12,44 @@ My Note is a dynamic and feature-rich note-taking application built with modern 
 - **Note Archiving**: Less relevant notes can be archived to keep the workspace clean.
 - **Note Tagging**: Notes can be tagged for efficient organization and retrieval.
 - **Optimistic Updates**: Leveraging React Query's `onMutate` for instant UI updates without waiting for server confirmation.
+
+### Different Note Types
+
+The note can be created with:
+
+1. Quick Note: a plain text note with no support for any markdown elements. It is meant to be simple, quick and efficient.
+2. Editor: thanks to `react-simplemde-editor`, a note can be styled with full fledge of styles and tools, such as: code, ordered lists, unordered lists, heading, bold and much more.
+3. Checkbox: a todo like note with nice checkboxes from RadixUI with smooth experience.
+
+![editor](./public/mynote-editor.png)
+
+### Change Theme
+
+With the usage of `next-themes` package, My Note features a change theme switch to toggle between the dark and light mode:
+
+```
+    <Switch
+        isSelected={isDarkMode}
+        size="sm"
+        color="success"
+        checked={isDarkMode}
+        onChange={toggleTheme}
+      />
+```
+
+![homepage-white](./public/mynote-homepage-white.png)
+
+### Note Dropdown
+
+Each note has number of actions:
+
+1. pin/unpin
+2. edit
+3. delete
+4. archive
+5. tag (a nested dropdown) to choose a tag from list of tags
+
+![dropdown](./public/mynote-dropdown.png)
 
 ## Technologies Used
 
