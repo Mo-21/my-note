@@ -188,6 +188,9 @@ export const SortableTodoItem = memo(
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
 
+    const [newContent, setNewContent] = useState(content);
+    const [isSelected, setIsSelected] = useState(selected);
+
     const style = useMemo(
       () => ({
         transform: CSS.Transform.toString(transform),
@@ -198,16 +201,23 @@ export const SortableTodoItem = memo(
 
     const onSelectChange = useCallback(
       (isSelected: boolean) => {
-        dispatch({ type: "CHANGE", id, selected: isSelected });
+        dispatch({
+          type: "CHANGE",
+          id,
+          selected: isSelected,
+          content: newContent,
+        });
         setTodos((currentTodos) => {
           const updatedTodos = currentTodos.map((todo) =>
-            todo.id === id ? { ...todo, selected: isSelected } : todo
+            todo.id === id
+              ? { ...todo, selected: isSelected, content: newContent }
+              : todo
           );
           setValue("content", JSON.stringify(updatedTodos));
           return updatedTodos;
         });
       },
-      [id, dispatch, setTodos, setValue]
+      [id, dispatch, setTodos, setValue, newContent]
     );
 
     return (
@@ -215,13 +225,25 @@ export const SortableTodoItem = memo(
         <div {...listeners} {...attributes} className="drag-handle">
           <GripIcon height={22} width={22} />
         </div>
-        <Checkbox
-          checked={selected}
-          onValueChange={(isSelected) => onSelectChange(isSelected)}
-          value={content}
-        >
-          {content}
-        </Checkbox>
+        <div className="flex w-full">
+          <Checkbox
+            checked={isSelected}
+            onValueChange={(isSelected) => {
+              setIsSelected(isSelected);
+              onSelectChange(isSelected);
+            }}
+            className="grow w-full"
+            value={content}
+          ></Checkbox>
+          <input
+            className="bg-transparent focus:outline-none focus:ring-0 border-none w-full overflow-auto"
+            onChange={(e) => {
+              setNewContent(e.target.value);
+              onSelectChange(isSelected);
+            }}
+            value={newContent}
+          />
+        </div>
         <button
           type="button"
           onClick={(event) => {

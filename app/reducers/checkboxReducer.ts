@@ -15,6 +15,7 @@ interface ChangeTodo {
   type: "CHANGE";
   id: string;
   selected: boolean;
+  content: string;
 }
 
 export type CheckboxAction = AddTodo | RemoveTodo | ChangeTodo;
@@ -31,7 +32,9 @@ export const checkboxReducer = (
       ];
     case "CHANGE":
       return state.map((todo) =>
-        todo.id === action.id ? { ...todo, selected: action.selected } : todo
+        todo.id === action.id
+          ? { ...todo, content: action.content, selected: action.selected }
+          : todo
       );
     case "REMOVE":
       return state.filter((todo) => todo.id !== action.id);
