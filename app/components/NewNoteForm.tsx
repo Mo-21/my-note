@@ -16,10 +16,9 @@ import {
 import { useForm, SubmitHandler } from "react-hook-form";
 import useCreateAndUpdateNote from "../hooks/useCreateAndUpdateNote";
 import { Note } from "@prisma/client";
-import { useEffect, useState } from "react";
 import NoteEditorForm from "./NoteEditorForm";
 import NoteTextarea from "./NoteTextarea";
-import CheckboxForm, { Todo } from "./CheckboxForm";
+import CheckboxForm from "./CheckboxForm";
 
 interface NewNoteFormProps {
   isOpen: boolean;
