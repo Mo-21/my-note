@@ -92,7 +92,7 @@ const CheckboxGroupForm = ({
 
     const newTodo = { selected: false, content: currentTodo, id: todoID };
     setTodos((currentTodos) => {
-      const updatedTodos = [...currentTodos, newTodo];
+      const updatedTodos = [newTodo, ...currentTodos];
       setValue("content", JSON.stringify(updatedTodos));
       return updatedTodos;
     });
